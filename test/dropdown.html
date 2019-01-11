@@ -67,18 +67,15 @@
 		.menu-item:hover{
 			background-color: #f3f5f7;
 		}
-		.menu.dropdown-active .dropdown-toggle,
-		.menu.dropdown:hover .dropdown-toggle{
+		.menu-active .dropdown-toggle{
 			background-color:#fff;
 		    border-color:#cdd0d4;
 		}
-		.menu.dropdown-active .dropdown-arrow,
-		.menu.dropdown:hover .dropdown-arrow{
+		.menu-active .dropdown-arrow{
 			background-image:url(../img/dropdown-arrow-active.png);
 		}
 
-		.menu.dropdown-active .dropdown-layer,
-		.menu.dropdown:hover .dropdown-layer{
+		.menu-active .dropdown-layer{
 			display:block;
 		}
 		
@@ -91,7 +88,14 @@
 			
 		</div>
 	</div> -->
-	<div class="menu dropdown">
+	<div class="menu dropdown fl" data-active="menu">
+		<a href="###" target="_blank" class="dropdown-toggle link">My MuShopping<i class="dropdown-arrow"></i></a>
+		<ul class="dropdown-layer dropdown-left">
+			<li><a href="###" target="_blank" class="menu-item">My Orders</a></li>
+			<li><a href="###" target="_blank" class="menu-item">Account Settings</a></li>
+		</ul>
+	</div>
+	<div class="menu dropdown fl" data-active="menu">
 		<a href="###" target="_blank" class="dropdown-toggle link">My MuShopping<i class="dropdown-arrow"></i></a>
 		<ul class="dropdown-layer dropdown-left">
 			<li><a href="###" target="_blank" class="menu-item">My Orders</a></li>
@@ -99,5 +103,25 @@
 		</ul>
 	</div>
 	<script src="../js/jquery.js"></script>
+	<script src="../js/dropdown.js"></script>
+	<script>
+		// $('.dropdown').hover(function(){
+		// 	var $this = $(this);
+		// 	$this.addClass($this.data('active')+'-active');
+		// },function(){
+		// 	var $this = $(this);
+		// 	$this.removeClass($this.data('active')+'-active');
+		// });
+
+		
+
+		// $('.dropdown').each(function(){
+		// 	dropdown($(this));
+		// });
+
+		// dropdown($('.dropdown')[0]);
+
+		$('.dropdown').dropdown();
+	</script>
 </body>
 </html>
