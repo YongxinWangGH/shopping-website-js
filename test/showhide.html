@@ -59,13 +59,13 @@
 	<script>
 
 		var $box=$('#box');
-		css3.fadeSlideLeftRight.init($box);
+		js.fadeslideLeftRight.init($box);
 		$('#btn-show').on('click',function(){
 		
-			css3.fadeSlideLeftRight.show($box);
+			js.fadeslideLeftRight.show($box);
 		});
 		$('#btn-hide').on('click',function(){
-			css3.fadeSlideLeftRight.hide($box);
+			js.fadeslideLeftRight.hide($box);
 		})
 
 		$box.on('show shown hide hidden',function(e){

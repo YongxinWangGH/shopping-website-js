@@ -130,4 +130,151 @@ css3._hide = function($elem, className){
 	});	
 };
 
-var js = {};
+var js = {
+	fade: {
+		init: function($elem){
+			js._init($elem);
+		},
+		show: function($elem){
+			js._show($elem, 'fadeIn');
+		},
+		hide: function($elem){
+			js._hide($elem, 'fadeOut');		
+		}
+	},
+
+	slideUpDown: {
+		init: function($elem){
+			js._init($elem);
+		},
+		show: function($elem){
+			js._show($elem, 'slideDown');			
+		},
+		hide: function($elem){
+			js._hide($elem, 'slideUp');			
+		}
+	},
+
+	slideLeftRight: {
+		init: function($elem){
+			js._customInit($elem, {
+				'width': 0,
+				'padding-left': 0,
+				'padding-right': 0
+			});
+		},
+
+		show: function($elem){
+			js._customShow($elem);			
+		},
+
+		hide: function(){
+			js._customHide($elem, {
+                 'width': 0,
+                 'padding-left': 0,
+                 'padding-right': 0
+             });
+		}
+	},
+
+	fadeslideUpDown: { 
+         init: function($elem) {
+     
+             js._customInit($elem, {
+
+                 'opacity': 0,
+                 'height': 0,
+                 'padding-top': 0,
+                 'padding-bottom': 0
+             });
+         },
+         show: function($elem) {
+     
+             js._customShow($elem);
+         },
+         hide: function($elem) {
+     
+             js._customHide($elem, {
+                 'opacity': 0,
+                 'height': 0,
+                 'padding-top': 0,
+                 'padding-bottom': 0
+             });
+         }
+     },
+     fadeslideLeftRight: { 
+         init: function($elem) {
+         
+             js._customInit($elem, {
+
+                 'opacity': 0,
+                 'width': 0,
+                 'padding-left': 0,
+                 'padding-right': 0
+             });
+         },
+         show: function($elem) {
+           
+             js._customShow($elem);
+         },
+         hide: function($elem) {
+            
+             js._customHide($elem, {
+                 'opacity': 0,
+                 'width': 0,
+                 'padding-left': 0,
+                 'padding-right': 0
+             });
+         }
+     }
+};
+
+js._init = function($elem,hiddenCallback){
+	$elem.removeClass('transition');
+	init($elem,hiddenCallback);
+};
+js._customInit = function($elem, options){
+	var styles = {}; 
+	for(var p in options){
+		styles[p] = $elem.css(p);
+	}
+	$elem.data('styles', styles);
+	js._init($elem,function(){
+		$elem.css(options);
+	});
+	
+};
+
+js._show = function($elem, mode){
+	show($elem,function(){
+		$elem.stop()[mode](function(){
+			$elem.data('status', 'shown').trigger('shown');
+		});
+	});
+};
+js._customShow = function($elem){
+	var styles = $elem.data('styles');
+	show($elem, function(){
+		$elem.show();
+		$elem.stop().animate($elem.data('styles'), function() {
+             $elem.data('status', 'shown').trigger('shown');
+         });
+	})
+};
+
+js._hide = function($elem, mode){
+	hide($elem,function(){
+		$elem.stop()[mode](function(){
+			$elem.data('status', 'hidden').trigger('hidden');
+		});
+	});
+};
+js._customHide = function($elem,options){
+
+	hide($elem, function(){
+		$elem.stop().animate(options,function(){
+			$elem.hide();
+			$elem.data('status', 'hidden').trigger('hidden');
+		});
+	});
+};
