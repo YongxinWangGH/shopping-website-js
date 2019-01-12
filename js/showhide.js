@@ -1,3 +1,5 @@
+var transition = window.mt.transition;
+
 function init($elem, hiddenCallback){
 	if($elem.is(':hidden')){
 		$elem.data('status', 'hidden');
@@ -47,7 +49,7 @@ var css3 = {
 			},
 		show: function($elem){
 				show($elem, function(){
-					$elem.off('transitionend').one('transitionend', function(){
+					$elem.off(transition.end).one(transition.end, function(){
 						$elem.data('status', 'shown').trigger('shown');
 					})
 					$elem.show();
@@ -58,7 +60,7 @@ var css3 = {
 			},
 		hide: function($elem){
 			hide($elem, function(){
-				$elem.off('transitionend').one('transitionend', function(){
+				$elem.off(transition.end).one(transition.end, function(){
 					$elem.hide();
 					$elem.data('status', 'hidden').trigger('hidden');
 				})
