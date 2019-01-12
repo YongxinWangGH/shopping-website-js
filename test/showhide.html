@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>showhide</title>
+	<link rel="stylesheet" href="../css/base.css">
+	<style>
+		body{
+			width:400px;
+			margin:0 auto;
+		}
+		.btn{
+			width:50%;
+			height:30px;
+		}
+		#box{
+			width:100%;
+			height:200px;
+			background-color:blue;
+		}
+	</style>
+</head>
+<body>
+
+	<button class="btn" id="btn-show">show</button><button class="btn" id="btn-hide">hide</button>
+	<div id="box"></div>
+	
+	<script src="../js/jquery.js"></script>
+	<script src="../js/showhide.js"></script>
+	<script>
+
+		var $box=$('#box');
+		silent.init($box);
+		$('#btn-show').on('click',function(){
+		
+			silent.show($box);
+		});
+		$('#btn-hide').on('click',function(){
+			silent.hide($box);
+		})
+
+		$box.on('show shown hide hidden',function(e){
+			// if(e.type=='show'){
+			// 	$box.html('<p>i am going to show up</p>');
+			// }else if(e.type=='shown'){
+			// 	setTimeout(function(){
+			// 		$box.html($box.html()+'<p>I already showed up</p>')
+			// 	},1000);
+			// }
+			console.log(e.type);
+		})
+	</script>
+</body>
+</html>
