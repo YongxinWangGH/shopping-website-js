@@ -14,24 +14,43 @@
 			height:30px;
 		}
 		#box{
+			color:white;
 			display:none;
-			width:100%;
-			height:200px;
+			width:400px;
+			/*height:200px;*/
 			background-color:blue;
+			overflow:hidden;
 		}
 		.transition{
 			transition: all 0.5s;
 		}
 		.fadeOut{
-			visibility:hidden;
-			opacity:0;
+			visibility:hidden !important;
+			opacity:0 !important;
+		}
+		.slideUpDownCollapse{
+			height:0 !important;
+			padding-top:0 !important;
+			padding-bottom:0 !important;
+		}
+		.slideLeftRightCollapse{
+			width:0 !important;
+			padding-left:0 !important;
+			padding-right:0 !important;
 		}
 	</style>
 </head>
 <body>
 
 	<button class="btn" id="btn-show">show</button><button class="btn" id="btn-hide">hide</button>
-	<div id="box" class=""></div>
+	<div id="box" class="">
+		<p>123</p>
+		<p>123</p>
+		<p>123</p>
+		<p>123</p>
+		<p>123</p>
+		<p>123</p>
+	</div>
 	<button class="btn">show2</button>
 	
 	<script src="../js/jquery.js"></script>
@@ -40,13 +59,13 @@
 	<script>
 
 		var $box=$('#box');
-		css3.fade.init($box);
+		css3.fadeSlideLeftRight.init($box);
 		$('#btn-show').on('click',function(){
 		
-			css3.fade.show($box);
+			css3.fadeSlideLeftRight.show($box);
 		});
 		$('#btn-hide').on('click',function(){
-			css3.fade.hide($box);
+			css3.fadeSlideLeftRight.hide($box);
 		})
 
 		$box.on('show shown hide hidden',function(e){

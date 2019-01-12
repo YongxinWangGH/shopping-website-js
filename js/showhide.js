@@ -42,48 +42,92 @@ var silent = {
 var css3 = {
 	fade: {
 		init: function($elem){
-				$elem.addClass('transition');
-				init($elem, function(){
-					$elem.addClass('fadeOut');
-				});
+				css3._init($elem, 'fadeOut');
 			},
 		show: function($elem){
-				show($elem, function(){
-					$elem.off(transition.end).one(transition.end, function(){
-						$elem.data('status', 'shown').trigger('shown');
-					})
-					$elem.show();
-					setTimeout(function(){
-						$elem.removeClass('fadeOut');
-					},20);
-				});					
+				css3._show($elem, 'fadeOut');							
 			},
 		hide: function($elem){
-			hide($elem, function(){
-				$elem.off(transition.end).one(transition.end, function(){
-					$elem.hide();
-					$elem.data('status', 'hidden').trigger('hidden');
-				})
-				$elem.addClass('fadeOut');
-			});			
-		}
+				css3._hide($elem,'fadeOut'); 			
+			}
 	},
 	slideUpDown: {
-		show: function(){},
-		hide: function(){}
+		init: function($elem){
+				$elem.height($elem.height());
+				css3._init($elem, 'slideUpDownCollapse');
+			},
+		show: function($elem){
+				css3._show($elem, 'slideUpDownCollapse');				
+			},
+		hide: function($elem){
+				css3._hide($elem,'slideUpDownCollapse'); 					
+			}
 	},
 	slideLeftRight: {
-		show: function(){},
-		hide: function(){}
+		init: function($elem){
+				$elem.width($elem.width());
+				css3._init($elem, 'slideLeftRightCollapse');
+			},
+		show: function($elem){
+				css3._show($elem, 'slideLeftRightCollapse');				
+			},
+		hide: function($elem){
+				css3._hide($elem,'slideLeftRightCollapse'); 					
+			}
 	},
 	fadeSlideUpDown: {
-		show: function(){},
-		hide: function(){}
+		init: function($elem){
+				$elem.height($elem.height());
+				css3._init($elem, 'fadeOut slideUpDownCollapse');
+			},
+		show: function($elem){
+				css3._show($elem, 'fadeOut slideUpDownCollapse');				
+			},
+		hide: function($elem){
+				css3._hide($elem,'fadeOut slideUpDownCollapse'); 					
+			}
 	},
 	fadeSlideLeftRight: {
-		show: function(){},
-		hide: function(){}
+		init: function($elem){
+				$elem.width($elem.width());
+				css3._init($elem, 'fadeOut slideLeftRightCollapse');
+			},
+		show: function($elem){
+				css3._show($elem, 'fadeOut slideLeftRightCollapse');				
+			},
+		hide: function($elem){
+				css3._hide($elem,'fadeOut slideLeftRightCollapse'); 					
+			}
 	}
+};
+
+css3._init = function($elem, className){
+	$elem.addClass('transition');
+	init($elem, function(){
+		$elem.addClass(className);
+	});
+};
+
+css3._show = function($elem, className){
+	show($elem, function(){
+		$elem.off(transition.end).one(transition.end, function(){
+			$elem.data('status', 'shown').trigger('shown');
+		})
+		$elem.show();
+		setTimeout(function(){
+			$elem.removeClass(className);
+		},20);
+	});	
+};
+
+css3._hide = function($elem, className){
+	hide($elem, function(){
+		$elem.off(transition.end).one(transition.end, function(){
+			$elem.hide();
+			$elem.data('status', 'hidden').trigger('hidden');
+		})
+		$elem.addClass(className);
+	});	
 };
 
 var js = {};
