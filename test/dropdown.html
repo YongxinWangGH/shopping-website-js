@@ -45,9 +45,9 @@
 
 		}
 		.menu .dropdown-arrow{			
-			width:8px;
-			height:6px;
-			background-image: url(../img/dropdown-arrow.png);
+			/*width:8px;
+			height:6px;*/
+			/*background-image: url(../img/dropdown-arrow.png);*/
 			margin-left:8px;			
 		}
 		.menu .dropdown-layer{		  
@@ -71,13 +71,36 @@
 			background-color:#fff;
 		    border-color:#cdd0d4;
 		}
-		.menu-active .dropdown-arrow{
+		/*.menu-active .dropdown-arrow{
 			background-image:url(../img/dropdown-arrow-active.png);
-		}
+		}*/
 
 		.menu-active .dropdown-layer{
 			display:block;
 		}
+		@font-face {
+			font-family: "iconfont";
+			src: url('font/iconfont.eot?t=1477124206'); /* IE9*/
+			src: url('font/iconfont.eot?t=1477124206#iefix') format('embedded-opentype'), /* IE6-IE8 */
+			url('font/iconfont.woff?t=1477124206') format('woff'), /* chrome, firefox */
+			url('font/iconfont.ttf?t=1477124206') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+			url('font/iconfont.svg?t=1477124206#iconfont') format('svg'); /* iOS 4.1- */
+		}
+		.icon {
+			font-family:"iconfont" !important;
+			font-size:14px;
+			font-style:normal;
+			-webkit-font-smoothing: antialiased;
+			-webkit-text-stroke-width: 0.2px;
+			-moz-osx-font-smoothing: grayscale;
+		}
+		[class*="-active"] .dropdown-arrow{
+			transform: rotate(180deg);
+		}
+		.transition{
+			transition:all 0.3s;
+		}
+	
 		
 	</style>
 </head>
@@ -89,14 +112,14 @@
 		</div>
 	</div> -->
 	<div class="menu dropdown fl" data-active="menu">
-		<a href="###" target="_blank" class="dropdown-toggle link">My MuShopping<i class="dropdown-arrow"></i></a>
+		<a href="###" target="_blank" class="dropdown-toggle link">My MuShopping<i class="dropdown-arrow icon transition">&#xe609</i></a>
 		<ul class="dropdown-layer dropdown-left">
 			<li><a href="###" target="_blank" class="menu-item">My Orders</a></li>
 			<li><a href="###" target="_blank" class="menu-item">Account Settings</a></li>
 		</ul>
 	</div>
 	<div class="menu dropdown fl" data-active="menu">
-		<a href="###" target="_blank" class="dropdown-toggle link">My MuShopping<i class="dropdown-arrow"></i></a>
+		<a href="###" target="_blank" class="dropdown-toggle link">My MuShopping<i class="dropdown-arrow icon transition">&#xe609</i></a>
 		<ul class="dropdown-layer dropdown-left">
 			<li><a href="###" target="_blank" class="menu-item">My Orders</a></li>
 			<li><a href="###" target="_blank" class="menu-item">Account Settings</a></li>
