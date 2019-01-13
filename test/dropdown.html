@@ -19,6 +19,7 @@
 
 		}
 		.dropdown-layer{
+			overflow:hidden;
 		    display:none;
 		    position: absolute;
 		    z-index:1;
@@ -75,9 +76,9 @@
 			background-image:url(../img/dropdown-arrow-active.png);
 		}*/
 
-		.menu-active .dropdown-layer{
+		/*.menu-active .dropdown-layer{
 			display:block;
-		}
+		}*/
 		@font-face {
 			font-family: "iconfont";
 			src: url('font/iconfont.eot?t=1477124206'); /* IE9*/
@@ -101,7 +102,20 @@
 			transition:all 0.3s;
 		}
 	
-		
+		.fadeOut{
+			visibility:hidden !important;
+			opacity:0 !important;
+		}
+		.slideUpDownCollapse{
+			height:0 !important;
+			padding-top:0 !important;
+			padding-bottom:0 !important;
+		}
+		.slideLeftRightCollapse{
+			width:0 !important;
+			padding-left:0 !important;
+			padding-right:0 !important;
+		}
 	</style>
 </head>
 <body>
@@ -127,6 +141,7 @@
 	</div>
 	<script src="../js/jquery.js"></script>
 	<script src="../js/transition.js"></script>
+	<script src="../js/showhide.js"></script>
 	<script src="../js/dropdown.js"></script>
 	<script>
 		// $('.dropdown').hover(function(){
@@ -145,7 +160,11 @@
 
 		// dropdown($('.dropdown')[0]);
 
-		$('.dropdown').dropdown();
+		$('.dropdown').dropdown({
+			css3: true,
+			js: false,
+			animation: 'slideUpDown'
+		});
 	</script>
 </body>
 </html>
