@@ -1,4 +1,4 @@
-/*公共样式*/
+/*common styles*/
 
 .container {
     /*站点导航*/
@@ -17,6 +17,15 @@ a.link:hover {
 }
 .transition{
     transition:all 0.3s;
+}
+.text-hidden{
+    text-indent: -9999px;
+    overflow: hidden;
+}
+.text-ellipsis{
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 /*iconfont*/
@@ -138,7 +147,47 @@ a.link:hover {
     border-color: #cdd0d4;
 }
 
-.text-hidden{
-    text-indent: -9999px;
-    overflow: hidden;
-}
+
+/*search*/
+    .search {
+        position: relative;
+        border: 1px solid #cfd2d5;
+    }
+    .search-inputbox {
+        width: 585px;
+        height: 40px;
+        line-height: 40px;
+        padding: 0 10px;
+        background-color: #fff;
+        border: none;
+    }
+    .search-btn {
+        width: 73px;
+        height: 40px;
+        line-height: 40px;
+        background-color: #07111b;
+        border:none;
+        font-size: 14px;
+        color: #fff;
+        text-align: center;
+        cursor:pointer;
+    }
+    .search-layer {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: -1px;
+        width: 100%;
+        background-color: #fff;
+        border: 1px solid #cfd2d5;
+    }
+    .search-layer-item {
+        height: 24px;
+        line-height: 24px;
+        padding: 0 10px;
+        cursor: pointer;
+
+    }
+    .search-layer-item:hover {
+        background-color: #f3f5f7;
+    }
