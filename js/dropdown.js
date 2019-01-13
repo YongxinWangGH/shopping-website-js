@@ -1,16 +1,25 @@
 (function($){
 	'use strict';
 
-	function Dropdown(elem, options){
-		this.$elem = $(elem);
+	function Dropdown($elem, options){
+		this.$elem = $elem;
 		this.$layer = this.$elem.find('.dropdown-layer');
 		this.activeClass = options.active + '-active';
 		this.options = options;
 
-		this.$layer.showHide(options);
-		
+		this._init();		
+	}
+
+	Dropdown.prototype._init = function(){
 		var self = this;
-		if(options.event === 'click'){
+
+		this.$layer.showHide(this.options);
+
+		this.$layer.on('show shown hide hidden', function(e){
+			self.$elem.trigger('dropdown-' + e.type)
+		})
+
+		if(this.options.event === 'click'){
 			this.$elem.on('click', function(e){
 				self.show();
 				e.stopPropagation();
@@ -19,7 +28,7 @@
 		}else {
 			this.$elem.hover($.proxy(this.show, this),$.proxy(this.hide, this));
 		}
-	}
+	};
 
 	Dropdown.prototype.show = function(){
 		var self = this;
@@ -37,7 +46,7 @@
 			self.$layer.showHide('show');
 		}
 		
-	}
+	};
 
 	Dropdown.prototype.hide = function(){
 		if(this.options.delay){
@@ -45,7 +54,7 @@
 		}
 		this.$elem.removeClass(this.activeClass);
 		this.$layer.showHide('hide');
-	}
+	};
 
 	Dropdown.DEFAULTS = {
 		event: 'hover',
@@ -76,9 +85,18 @@
 	$.fn.extend({
 		dropdown: function(option){
 			return this.each(function(){
-				var options = $.extend({},Dropdown.DEFAULTS,$(this).data(),option);
+				var $this = $(this),
+					dropdown = $this.data('dropdown'),
+					options = $.extend({},Dropdown.DEFAULTS,$(this).data(), typeof option === 'object' && option);
 				
-				new Dropdown(this,options);
+				//singleton
+				if(!dropdown){
+					dropdown = $this.data('dropdown', dropdown = new Dropdown($this,options));
+				}
+
+				if(typeof dropdown[option] === 'function'){
+					dropdown[option]();
+				}
 			});
 		}
 	});

@@ -135,20 +135,8 @@
 			<li><a href="###" target="_blank" class="menu-item">Account Settings</a></li>
 		</ul>
 	</div>
-	<div class="menu dropdown fl" data-active="menu">
-		<a href="javascript:;" class="dropdown-toggle link">My MuShopping<i class="dropdown-arrow icon transition">&#xe609</i></a>
-		<ul class="dropdown-layer dropdown-left">
-			<li><a href="###" target="_blank" class="menu-item">My Orders</a></li>
-			<li><a href="###" target="_blank" class="menu-item">Account Settings</a></li>
-		</ul>
-	</div>
-	<div class="menu dropdown fl" data-active="menu">
-		<a href="javascript:;" class="dropdown-toggle link">My MuShopping<i class="dropdown-arrow icon transition">&#xe609</i></a>
-		<ul class="dropdown-layer dropdown-left">
-			<li><a href="###" target="_blank" class="menu-item">My Orders</a></li>
-			<li><a href="###" target="_blank" class="menu-item">Account Settings</a></li>
-		</ul>
-	</div>
+	<button id="btn-show">show</button>
+	<button id="btn-hide">hide</button>
 	<script src="../js/jquery.js"></script>
 	<script src="../js/transition.js"></script>
 	<script src="../js/showhide.js"></script>
@@ -170,12 +158,25 @@
 
 		// dropdown($('.dropdown')[0]);
 
-		$('.dropdown').dropdown({
+		var dropdownDom = $('.dropdown');
+
+		dropdownDom.dropdown({
 			// event:'click',
 			css3: true,
 			js: false,
 			animation: 'slideUpDown',
 			delay:0
+		});
+
+		dropdownDom.on('dropdown-show dropdown-shown dropdown-hide dropdown-hidden', function(e){
+			console.log(e.type);
+		});
+
+		$('#btn-show').on('click',function(){
+			dropdownDom.dropdown('show');
+		});
+		$('#btn-hide').on('click',function(){
+			dropdownDom.dropdown('hide');
 		});
 	</script>
 </body>
