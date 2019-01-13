@@ -56,6 +56,8 @@ a.link:hover {
 }
 
 .dropdown-layer {
+    overflow: hidden;
+    /*height:100%;*/
     display: none;
     position: absolute;
     z-index: 1;
@@ -69,6 +71,32 @@ a.link:hover {
 .dropdown-right {
     right: 0;
     left: auto;
+}
+
+.dropdown-loading{
+    width:32px;
+    height: 32px;
+    background: url(../img/loading.gif) no-repeat;
+    margin: 20px;
+}
+
+/*showhide*/
+.transition{
+    transition: all 0.5s;
+}
+.fadeOut{
+    visibility:hidden !important;
+    opacity:0 !important;
+}
+.slideUpDownCollapse{
+    height:0 !important;
+    padding-top:0 !important;
+    padding-bottom:0 !important;
+}
+.slideLeftRightCollapse{
+    width:0 !important;
+    padding-left:0 !important;
+    padding-right:0 !important;
 }
 
 
@@ -108,8 +136,4 @@ a.link:hover {
 .menu-active .dropdown-toggle {
     background-color: #fff;
     border-color: #cdd0d4;
-}
-
-.menu-active .dropdown-layer {
-    display: block;
 }

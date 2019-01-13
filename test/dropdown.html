@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<title>dropdown</title>
 	<link rel="stylesheet" href="../css/base.css">
+	
 	<style>
 		body{
 			background-color: #eee;
@@ -38,7 +39,7 @@
 
 		}
 
-		/*menu dropdown*/
+		
 
 		.menu .dropdown-toggle{
 			display:block;
@@ -49,9 +50,7 @@
 
 		}
 		.menu .dropdown-arrow{			
-			/*width:8px;
-			height:6px;*/
-			/*background-image: url(../img/dropdown-arrow.png);*/
+			
 			margin-left:8px;			
 		}
 		.menu .dropdown-layer{		  
@@ -63,7 +62,7 @@
 			display:block;
 			height:30px;
 			line-height:30px;
-			padding:0 12px;
+			padding:0 20px;
 			color:#4d555d;
 			white-space: nowrap;
 
@@ -75,13 +74,7 @@
 			background-color:#fff;
 		    border-color:#cdd0d4;
 		}
-		/*.menu-active .dropdown-arrow{
-			background-image:url(../img/dropdown-arrow-active.png);
-		}*/
-
-		/*.menu-active .dropdown-layer{
-			display:block;
-		}*/
+		
 		@font-face {
 			font-family: "iconfont";
 			src: url('font/iconfont.eot?t=1477124206'); /* IE9*/
@@ -119,6 +112,12 @@
 			padding-left:0 !important;
 			padding-right:0 !important;
 		}
+		.dropdown-loading{
+	        width:32px;
+	        height: 32px;
+	        background: url(../img/loading.gif) no-repeat;
+	        margin: 20px;
+	    }
 	</style>
 </head>
 <body>
@@ -128,11 +127,12 @@
 			
 		</div>
 	</div> -->
-	<div class="menu dropdown fl" data-active="menu">
+	<div class="menu dropdown fl" data-active="menu" data-load="dropdown.json">
 		<a href="javascript:;" class="dropdown-toggle link">My MuShopping<i class="dropdown-arrow icon transition">&#xe609</i></a>
 		<ul class="dropdown-layer dropdown-left">
-			<li><a href="###" target="_blank" class="menu-item">My Orders</a></li>
-			<li><a href="###" target="_blank" class="menu-item">Account Settings</a></li>
+			<li class="dropdown-loading"></li>
+			<!-- <li><a href="###" target="_blank" class="menu-item">My Orders</a></li>
+			<li><a href="###" target="_blank" class="menu-item">Account Settings</a></li> -->
 		</ul>
 	</div>
 	<button id="btn-show">show</button>
@@ -160,6 +160,29 @@
 
 		var dropdownDom = $('.dropdown');
 
+		dropdownDom.on('dropdown-show', function(){
+			var $this = $(this),
+				dataLoad = $this.data('load');
+
+			if(!dataLoad) return;			
+
+			if(!$this.data('loaded')){
+				var $layer = $(this).find('.dropdown-layer'),
+					html = '';
+
+				$.getJSON(dataLoad, function(data){
+					setTimeout(function(){
+						for (var i=0; i<data.length; i++ ){
+							html += '<li><a href="' + data[i].url + '" target="_blank" class="menu-item">'+ data[i].name +'</a></li>'
+						}
+						$layer.html(html);
+						$this.data('loaded', true);
+					},1000);
+					
+				})
+			}
+			
+		})
 		dropdownDom.dropdown({
 			// event:'click',
 			css3: true,

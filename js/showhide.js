@@ -56,7 +56,10 @@ var css3 = {
 	},
 	slideUpDown: {
 		init: function($elem){
-				$elem.height($elem.height());
+				if($elem.data('height')){
+					$elem.height($elem.height());
+				}
+				// $elem.height($elem.height());
 				css3._init($elem, 'slideUpDownCollapse');
 			},
 		show: function($elem){
