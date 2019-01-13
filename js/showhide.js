@@ -1,3 +1,6 @@
+(function($){
+	'use strict'
+
 var transition = window.mt.transition;
 
 function init($elem, hiddenCallback){
@@ -278,3 +281,51 @@ js._customHide = function($elem,options){
 		});
 	});
 };
+
+var defaults = {
+	css3: false,
+	js: false,
+	animation: 'fade'
+};
+
+function showHide($elem, options){
+	var mode = null;
+	options = $.extend({}, defaults, options);
+
+	if(options.css3 && transition.isSupport){
+		mode = css3[options.animation] || css3[defaults.animation];
+	}else if (options.js){
+		mode = js[options.animation] || js[defaults.animation];
+	}else {
+		mode = silent;
+	}
+	mode.init($elem);
+	return {
+		show: $.proxy(mode.show, this, $elem), //change the context of a function & pass arguments to the function
+		hide: $.proxy(mode.hide, this, $elem)
+	};
+
+}
+
+// window.mt = window.mt || {};
+// window.mt.showHide = showHide;
+
+$.fn.extend({
+	showHide: function(option){
+		return this.each(function(){
+			var $this = $(this),
+				options = $.extend({}, defaults, typeof option === 'object' && option),
+				mode = $this.data('showHide');
+
+			if(!mode){
+				$this.data('showHide', mode = showHide($this, options));
+			}
+
+			if(typeof mode[option] === 'function'){
+				mode[option]();
+			}
+		});
+	}
+});
+
+})(jQuery);

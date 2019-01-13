@@ -59,13 +59,21 @@
 	<script>
 
 		var $box=$('#box');
-		js.fadeslideLeftRight.init($box);
+
+		$box.showHide({
+			css3: true,
+			js: true,
+			animation: 'slideLeftRight'
+		});
+		// js.fadeslideLeftRight.init($box);
 		$('#btn-show').on('click',function(){
 		
-			js.fadeslideLeftRight.show($box);
+			// js.fadeslideLeftRight.show($box);
+			$box.showHide('show');
 		});
 		$('#btn-hide').on('click',function(){
-			js.fadeslideLeftRight.hide($box);
+			// js.fadeslideLeftRight.hide($box);
+			$box.showHide('hide');
 		})
 
 		$box.on('show shown hide hidden',function(e){
