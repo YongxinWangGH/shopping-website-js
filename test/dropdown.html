@@ -5,6 +5,9 @@
 	<title>dropdown</title>
 	<link rel="stylesheet" href="../css/base.css">
 	<style>
+		body{
+			background-color: #eee;
+		}
 		.dropdown{
 		    position: relative;
 		}
@@ -126,14 +129,21 @@
 		</div>
 	</div> -->
 	<div class="menu dropdown fl" data-active="menu">
-		<a href="###" target="_blank" class="dropdown-toggle link">My MuShopping<i class="dropdown-arrow icon transition">&#xe609</i></a>
+		<a href="javascript:;" class="dropdown-toggle link">My MuShopping<i class="dropdown-arrow icon transition">&#xe609</i></a>
 		<ul class="dropdown-layer dropdown-left">
 			<li><a href="###" target="_blank" class="menu-item">My Orders</a></li>
 			<li><a href="###" target="_blank" class="menu-item">Account Settings</a></li>
 		</ul>
 	</div>
 	<div class="menu dropdown fl" data-active="menu">
-		<a href="###" target="_blank" class="dropdown-toggle link">My MuShopping<i class="dropdown-arrow icon transition">&#xe609</i></a>
+		<a href="javascript:;" class="dropdown-toggle link">My MuShopping<i class="dropdown-arrow icon transition">&#xe609</i></a>
+		<ul class="dropdown-layer dropdown-left">
+			<li><a href="###" target="_blank" class="menu-item">My Orders</a></li>
+			<li><a href="###" target="_blank" class="menu-item">Account Settings</a></li>
+		</ul>
+	</div>
+	<div class="menu dropdown fl" data-active="menu">
+		<a href="javascript:;" class="dropdown-toggle link">My MuShopping<i class="dropdown-arrow icon transition">&#xe609</i></a>
 		<ul class="dropdown-layer dropdown-left">
 			<li><a href="###" target="_blank" class="menu-item">My Orders</a></li>
 			<li><a href="###" target="_blank" class="menu-item">Account Settings</a></li>
@@ -161,9 +171,11 @@
 		// dropdown($('.dropdown')[0]);
 
 		$('.dropdown').dropdown({
+			// event:'click',
 			css3: true,
 			js: false,
-			animation: 'slideUpDown'
+			animation: 'slideUpDown',
+			delay:0
 		});
 	</script>
 </body>
