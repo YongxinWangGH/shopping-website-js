@@ -35,5 +35,50 @@
 		animation: 'slideUpDown',
 		delay:0
 	});
+
+	//header search
+    var $headerSearch = $('#header-search');
+    var html = '',
+    	maxNum = 10;
+    $headerSearch.on('search-getData', function(e,data,$layer){
+    	var $this = $(this);
+    	html = createHeaderSearchLayer(data, maxNum);
+    	$layer.html(html);
+
+    	if(html){
+    		$this.search('showLayer');
+    	}else{
+    		$this.search('hideLayer');
+    	}
+    }).on('search-noData', function(e,$layer){
+    	$(this).search('hideLayer');
+    	$layer.html('');
+    }).on('click', '.search-layer-item', function(){
+ 		$headerSearch.search('setInputVal', $(this).html());
+ 		$headerSearch.search('submit');
+ 	});
+    
+    $headerSearch.search({
+        autocomplete: true,
+        css3: false,
+        js: false,
+        animation: 'fade'
+    });
+
+    function createHeaderSearchLayer(data, maxNum){
+    	var html = '',
+    		dataNum = data['res']['sug'].length;
+
+    	if(dataNum === 0){
+    		return '';
+    	}
+
+     	for(var i = 0; i < dataNum; i++){
+			if(i >= maxNum) break;
+			html += '<li class="search-layer-item text-ellipsis">' + data['res']['sug'][i] + '</li>'
+		}
+
+		return html;
+    }
 })(jQuery)
 
