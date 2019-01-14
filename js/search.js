@@ -1,7 +1,34 @@
 (function ($) {
     'use strict';
 
- 
+ 	var cache = {
+        data: {},
+        count: 0,
+        addData: function (key, data) {
+            if (!this.data[key]) {
+                this.data[key] = data;
+                this.count++;
+            }
+        },
+        readData: function (key) {
+            return this.data[key];
+        },
+        deleteDataByKey: function (key) {
+            delete this.data[key];
+            this.count--;
+        },
+        deleteDataByOrder: function (num) {
+            var count = 0;
+
+            for (var p in this.data) {
+                if (count >= num) {
+                    break;
+                }
+                count++;
+                this.deleteDataByKey(p);
+            }
+        }
+    };
 
     function Search($elem, options) {
         this.$elem = $elem;
@@ -10,7 +37,7 @@
         this.$form = this.$elem.find('.search-form');
         this.$input = this.$elem.find('.search-inputbox');        
         this.$layer = this.$elem.find('.search-layer');  
-
+        this.loaded = false;
 
         this.$elem.on('click','.search-btn', $.proxy(this.submit, this));
 
@@ -35,8 +62,15 @@
         this.$form.submit();
     };
     Search.prototype.autocomplete = function() {
+    	var timer = null,
+    		self = this;
         this.$input
-        	.on('input', $.proxy(this.getData, this))
+        	.on('input', function(){
+        		clearTimeout(timer);
+        		timer = setTimeout(function(){
+        			self.getData();
+        		},200)
+        	})
         	.on('focus', $.proxy(this.showLayer, this))
         	.on('click', function(){
         		return false;
@@ -46,24 +80,36 @@
     };
     Search.prototype.getData = function() {
     	var self = this;
-       $.ajax({
-			url: this.options.url + $.trim(this.$input.val()),
+    	var inputVal = this.getInputVal();
+    	if(inputVal === '') return self.$elem.trigger('search-noData');
+
+    	if(cache.readData(inputVal)){
+    		return self.$elem.trigger('search-getData', [cache.readData(inputVal)])
+    	}
+    	if(this.jqXHR) this.jqXHR.abort();
+
+        this.jqXHR = $.ajax({
+			url: this.options.url + inputVal,
 			dataType: 'jsonp',
 			jsonpCallback: 'nil'	
 		}).done(function(data){
-			self.$elem.trigger('search-getData', [data, self.$layer])
+			cache.addData(inputVal,data);
+			self.$elem.trigger('search-getData', [data])
 		}).fail(function(){
-			self.$elem.trigger('search-noData', [self.$layer]);
+			self.$elem.trigger('search-noData');
 		}).always(function(){
-			
+			self.jqXHR = null;
 		});
     };
     Search.prototype.showLayer = function() {
-    	if(this.$layer.children().length === 0) return;
+    	if(!this.loaded) return;
         this.$layer.showHide('show');
     };
     Search.prototype.hideLayer = function() {
         this.$layer.showHide('hide');
+    };
+    Search.prototype.getInputVal = function() {
+        return $.trim(this.$input.val());
     };
     Search.prototype.setInputVal = function(val) {
         this.$input.val(removeHtmlTags(val));
@@ -71,6 +117,10 @@
         function removeHtmlTags(str) {
             return str.replace(/<(?:[^>'"]|"[^"]*"|'[^']*')*>/g, '');
         }
+    };
+    Search.prototype.appendLayer = function(html) {
+        this.$layer.html(html);
+        this.loaded = !!html;
     };
   
     $.fn.extend({

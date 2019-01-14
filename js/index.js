@@ -40,19 +40,20 @@
     var $headerSearch = $('#header-search');
     var html = '',
     	maxNum = 10;
-    $headerSearch.on('search-getData', function(e,data,$layer){
+    $headerSearch.on('search-getData', function(e,data){
     	var $this = $(this);
     	html = createHeaderSearchLayer(data, maxNum);
-    	$layer.html(html);
+    	// $layer.html(html);
+    	$this.search('appendLayer',html);
 
     	if(html){
     		$this.search('showLayer');
     	}else{
     		$this.search('hideLayer');
     	}
-    }).on('search-noData', function(e,$layer){
-    	$(this).search('hideLayer');
-    	$layer.html('');
+    }).on('search-noData', function(e){
+    	$(this).search('hideLayer').search('appendLayer','');
+    	// $layer.html('');
     }).on('click', '.search-layer-item', function(){
  		$headerSearch.search('setInputVal', $(this).html());
  		$headerSearch.search('submit');
