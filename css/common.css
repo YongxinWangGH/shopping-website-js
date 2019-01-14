@@ -15,6 +15,9 @@ a.link:hover {
     /*链接经过颜色*/
     color: #f01414 !important;
 }
+input{
+    outline:none;
+}
 .transition{
     transition:all 0.3s;
 }
