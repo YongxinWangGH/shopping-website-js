@@ -106,17 +106,17 @@
     <!-- focus -->
     <div class="focus">
         <div class="container">
-            <div class="category fl">
-                <a href="###" target="_blank" class="category-title"><i class="icon">&#xe608;</i>商品分类</a>
+            <div id="focus-category" class="category fl">
+                <a href="###" target="_blank" class="category-title"><i class="icon">&#xe608;</i>Category</a>
                 <ul class="category-list">
-                    <li class="dropdown" data-active="category" >
+                    <li class="dropdown" data-active="category"  data-load="js/category-detail-1.json">
                         <div class="dropdown-toggle">
-                            <a href="###" target="_blank" class="dropdown-link">家用电器</a>
+                            <a href="###" target="_blank" class="dropdown-link">Household Appliances</a>
                             <i class="dropdown-arrow">&gt;</i>
                         </div>
                         <div class="dropdown-layer">
                             <div class="dropdown-loading"></div>
-                            <dl class="category-detail cf">
+                            <!-- <dl class="category-detail cf">
                                 <dt class="category-detail-title fl"><a href="###" target="_blank" class="category-detail-title-link">手机通讯</a></dt>
                                 <dd class="category-detail-item fl">
                                     <a href="###" target="_blank" class="link">手机</a>
@@ -124,14 +124,14 @@
                                     <a href="###" target="_blank" class="link">以旧换新</a>
 
                                 </dd>
-                            </dl>
+                            </dl> -->
                         </div>
                     </li>
                     <li class="dropdown" data-active="category" data-load="js/category-detail-2.json">
                         <div class="dropdown-toggle">
-                            <a href="###" target="_blank" class="dropdown-link">手机</a
-                            >、<a href="###" target="_blank" class="dropdown-link">运营商</a
-                            >、<a href="###" target="_blank" class="dropdown-link">数码</a>
+                            <a href="###" target="_blank" class="dropdown-link">Mobile</a
+                            >、<a href="###" target="_blank" class="dropdown-link">Network</a
+                            >
                             <i class="dropdown-arrow">&gt;</i>
                         </div>
                         <div class="dropdown-layer">
@@ -140,8 +140,8 @@
                     </li>
                     <li class="dropdown" data-active="category" data-load="js/category-detail-3.json">
                         <div class="dropdown-toggle">
-                            <a href="###" target="_blank" class="dropdown-link">电脑</a
-                            >、<a href="###" target="_blank" class="dropdown-link">办公</a>
+                            <a href="###" target="_blank" class="dropdown-link">Computer</a
+                            >、<a href="###" target="_blank" class="dropdown-link">Office</a>
                             <i class="dropdown-arrow">&gt;</i>
                         </div>
                         <div class="dropdown-layer">
@@ -150,10 +150,9 @@
                     </li>
                     <li class="dropdown" data-active="category" data-load="js/category-detail-4.json">
                         <div class="dropdown-toggle">
-                            <a href="###" target="_blank" class="dropdown-link">家居</a
-                            >、<a href="###" target="_blank" class="dropdown-link">家具</a
-                            >、<a href="###" target="_blank" class="dropdown-link">家装</a
-                            >、<a href="###" target="_blank" class="dropdown-link">厨具</a>
+                            <a href="###" target="_blank" class="dropdown-link">Home</a
+                            >、<a href="###" target="_blank" class="dropdown-link">Furniture</a
+                            >
                             <i class="dropdown-arrow">&gt;</i>
                         </div>
                         <div class="dropdown-layer">
@@ -162,10 +161,10 @@
                     </li>
                     <li class="dropdown" data-active="category" data-load="js/category-detail-5.json">
                         <div class="dropdown-toggle">
-                            <a href="###" target="_blank" class="dropdown-link">男装</a
-                            >、<a href="###" target="_blank" class="dropdown-link">女装</a
-                            >、<a href="###" target="_blank" class="dropdown-link">童装</a
-                            >、<a href="###" target="_blank" class="dropdown-link">内衣</a>
+                            <a href="###" target="_blank" class="dropdown-link">Women</a
+                            >、<a href="###" target="_blank" class="dropdown-link">Men</a
+                            >、<a href="###" target="_blank" class="dropdown-link">Kids</a
+                            >
                             <i class="dropdown-arrow">&gt;</i>
                         </div>
                         <div class="dropdown-layer">
@@ -174,9 +173,9 @@
                     </li>
                     <li class="dropdown" data-active="category" data-load="js/category-detail-6.json">
                         <div class="dropdown-toggle">
-                            <a href="###" target="_blank" class="dropdown-link">化妆</a
-                            >、<a href="###" target="_blank" class="dropdown-link">清洁</a
-                            >、<a href="###" target="_blank" class="dropdown-link">宠物</a>
+                            <a href="###" target="_blank" class="dropdown-link">Beauty</a
+                            >、<a href="###" target="_blank" class="dropdown-link">Cleaning</a
+                            >、<a href="###" target="_blank" class="dropdown-link">Pet</a>
                             <i class="dropdown-arrow">&gt;</i>
                         </div>
                         <div class="dropdown-layer">
@@ -185,8 +184,8 @@
                     </li>
                     <li class="dropdown" data-active="category" data-load="js/category-detail-7.json">
                         <div class="dropdown-toggle">
-                            <a href="###" target="_blank" class="dropdown-link">运动户外</a
-                            >、<a href="###" target="_blank" class="dropdown-link">钟表</a>
+                            <a href="###" target="_blank" class="dropdown-link">Sports</a
+                            >、<a href="###" target="_blank" class="dropdown-link">Clock</a>
                             <i class="dropdown-arrow">&gt;</i>
                         </div>
                         <div class="dropdown-layer">
@@ -195,8 +194,8 @@
                     </li>
                     <li class="dropdown" data-active="category" data-load="js/category-detail-8.json">
                         <div class="dropdown-toggle">
-                            <a href="###" target="_blank" class="dropdown-link">汽车</a
-                            >、<a href="###" target="_blank" class="dropdown-link">汽车用品</a>
+                            <a href="###" target="_blank" class="dropdown-link">Car</a
+                            >、<a href="###" target="_blank" class="dropdown-link">Car items</a>
                             <i class="dropdown-arrow">&gt;</i>
                         </div>
                         <div class="dropdown-layer">
@@ -205,8 +204,8 @@
                     </li>
                     <li class="dropdown" data-active="category" data-load="js/category-detail-9.json">
                         <div class="dropdown-toggle">
-                            <a href="###" target="_blank" class="dropdown-link">母婴</a
-                            >、<a href="###" target="_blank" class="dropdown-link">玩具乐器</a>
+                            <a href="###" target="_blank" class="dropdown-link">Baby</a
+                            >、<a href="###" target="_blank" class="dropdown-link">Toys</a>
                             <i class="dropdown-arrow">&gt;</i>
                         </div>
                         <div class="dropdown-layer">
@@ -215,10 +214,10 @@
                     </li>
                     <li class="dropdown" data-active="category" data-load="js/category-detail-10.json">
                         <div class="dropdown-toggle">
-                            <a href="###" target="_blank" class="dropdown-link">食品</a
-                            >、<a href="###" target="_blank" class="dropdown-link">酒类</a
-                            >、<a href="###" target="_blank" class="dropdown-link">生鲜</a
-                            >、<a href="###" target="_blank" class="dropdown-link">特产</a>
+                            <a href="###" target="_blank" class="dropdown-link">Food</a
+                            >、<a href="###" target="_blank" class="dropdown-link">Liquor</a
+                            >、<a href="###" target="_blank" class="dropdown-link">Freezer</a
+                            >
                             <i class="dropdown-arrow">&gt;</i>
                         </div>
                         <div class="dropdown-layer">
@@ -227,7 +226,7 @@
                     </li>
                     <li class="dropdown" data-active="category" data-load="js/category-detail-11.json">
                         <div class="dropdown-toggle">
-                            <a href="###" target="_blank" class="dropdown-link">医药保健</a>
+                            <a href="###" target="_blank" class="dropdown-link">Medicine</a>
                             <i class="dropdown-arrow">&gt;</i>
                         </div>
                         <div class="dropdown-layer">
@@ -236,9 +235,9 @@
                     </li>
                     <li class="dropdown" data-active="category" data-load="js/category-detail-12.json">
                         <div class="dropdown-toggle">
-                            <a href="###" target="_blank" class="dropdown-link">图书</a
-                            >、<a href="###" target="_blank" class="dropdown-link">音像</a
-                            >、<a href="###" target="_blank" class="dropdown-link">电子书</a>
+                            <a href="###" target="_blank" class="dropdown-link">Books</a
+                            >、<a href="###" target="_blank" class="dropdown-link">Audio</a
+                            >、<a href="###" target="_blank" class="dropdown-link">E-book</a>
                             <i class="dropdown-arrow">&gt;</i>
                         </div>
                         <div class="dropdown-layer">
@@ -247,10 +246,9 @@
                     </li>
                     <li class="dropdown" data-active="category" data-load="js/category-detail-13.json">
                         <div class="dropdown-toggle">
-                            <a href="###" target="_blank" class="dropdown-link">彩票</a
-                            >、<a href="###" target="_blank" class="dropdown-link">旅行</a
-                            >、<a href="###" target="_blank" class="dropdown-link">充值</a
-                            >、<a href="###" target="_blank" class="dropdown-link">票务</a>
+                            <a href="###" target="_blank" class="dropdown-link">Lottery</a
+                            >、<a href="###" target="_blank" class="dropdown-link">Travel</a
+                            >、<a href="###" target="_blank" class="dropdown-link">Tickets</a>
                             <i class="dropdown-arrow">&gt;</i>
                         </div>
                         <div class="dropdown-layer">
@@ -259,10 +257,8 @@
                     </li>
                     <li class="dropdown" data-active="category" data-load="js/category-detail-14.json">
                         <div class="dropdown-toggle">
-                            <a href="###" target="_blank" class="dropdown-link">理财</a
-                            >、<a href="###" target="_blank" class="dropdown-link">众筹</a
-                            >、<a href="###" target="_blank" class="dropdown-link">白条</a
-                            >、<a href="###" target="_blank" class="dropdown-link">保险</a>
+                            <a href="###" target="_blank" class="dropdown-link">Finance</a
+                            >、<a href="###" target="_blank" class="dropdown-link">Insurance</a>
                             <i class="dropdown-arrow">&gt;</i>
                         </div>
                         <div class="dropdown-layer">
@@ -272,7 +268,82 @@
                 </ul>
             </div>
             <div class="slider fl"></div>
-            <div class="focus-sidebar fr"> </div>
+            <div class="focus-sidebar fr">
+            	<div class="focus-news">
+                    <div class="focus-news-head">
+                        <h2 class="focus-news-title fl">Mo News</h2>
+                        <a href="###" target="_blank" class="link fr">More &gt;</a>
+                    </div>
+                    <div class="focus-news-body">
+                        <p class="text-ellipsis">
+                            <a href="###" target="_blank" class="link"><strong>[On Sale]</strong> Everyday essentials are happening now</a>
+                        </p>
+                        <p class="text-ellipsis">
+                            <a href="###" target="_blank" class="link"><strong>[News]</strong> Outrage over water bottles at Aus Open</a>
+                        </p>
+                        <p class="text-ellipsis">
+                            <a href="###" target="_blank" class="link"><strong>[On Sale]</strong> Summer wedding inspo</a>
+                        </p>
+                        <p class="text-ellipsis">
+                            <a href="###" target="_blank" class="link"><strong>[News]</strong> How to make school shopping easier</a>
+                        </p>
+                        <p class="text-ellipsis">
+                            <a href="###" target="_blank" class="link"><strong>[On Sale]</strong> 20% off school shoes</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="focus-service cf">
+                    <a href="###" target="_blank" class="focus-service-item fl">
+                        <i class="icon focus-service-icon">&#xe612;</i>
+                        <span class="focus-service-text">Phone</span>
+                    </a>
+                    <a href="###" target="_blank" class="focus-service-item fl">
+                        <i class="icon focus-service-icon">&#xe611;</i>
+                        <span class="focus-service-text">Travel</span>
+                    </a>
+                    <a href="###" target="_blank" class="focus-service-item fl">
+                        <i class="icon focus-service-icon">&#xe607;</i>
+                        <span class="focus-service-text">Movie</span>
+                    </a>
+                    <a href="###" target="_blank" class="focus-service-item fl">
+                        <i class="icon focus-service-icon">&#xe60e;</i>
+                        <span class="focus-service-text">Game</span>
+                    </a>
+                    <a href="###" target="_blank" class="focus-service-item fl">
+                        <i class="icon focus-service-icon">&#xe605;</i>
+                        <span class="focus-service-text">Ticket</span>
+                    </a>
+                    <a href="###" target="_blank" class="focus-service-item fl">
+                        <i class="icon focus-service-icon">&#xe603;</i>
+                        <span class="focus-service-text">Fuel</span>
+                    </a>
+                    <a href="###" target="_blank" class="focus-service-item fl">
+                        <i class="icon focus-service-icon">&#xe602;</i>
+                        <span class="focus-service-text">Hotel</span>
+                    </a>
+                    <a href="###" target="_blank" class="focus-service-item fl">
+                        <i class="icon focus-service-icon">&#xe601;</i>
+                        <span class="focus-service-text">Train</span>
+                    </a>
+                    <a href="###" target="_blank" class="focus-service-item fl">
+                        <i class="icon focus-service-icon">&#xe60d;</i>
+                        <span class="focus-service-text">Group</span>
+                    </a>
+                    <a href="###" target="_blank" class="focus-service-item fl">
+                        <i class="icon focus-service-icon">&#xe60c;</i>
+                        <span class="focus-service-text">Finance</span>
+                    </a>
+                    <a href="###" target="_blank" class="focus-service-item fl">
+                        <i class="icon focus-service-icon">&#xe610;</i>
+                        <span class="focus-service-text">Gift Card</span>
+                    </a>
+                    <a href="###" target="_blank" class="focus-service-item fl">
+                        <i class="icon focus-service-icon">&#xe60f;</i>
+                        <span class="focus-service-text">Carpet</span>
+                    </a>
+                </div>
+                <div class="focus-ad"></div>
+            </div>
         </div>
     </div> 
 

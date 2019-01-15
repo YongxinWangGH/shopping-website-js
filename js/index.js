@@ -3,33 +3,62 @@
 
 	var dropdownDom = $('.dropdown');
 
-		dropdownDom.on('dropdown-show', function(){
-			var $this = $(this),
-				dataLoad = $this.data('load');
+		// $('.menu').on('dropdown-show', function(){
+		// 	var $this = $(this),
+		// 		dataLoad = $this.data('load');
 
-			if(!dataLoad) return;			
+		// 	if(!dataLoad) return;			
 
-			if(!$this.data('loaded')){
-				var $layer = $(this).find('.dropdown-layer'),
-					html = '';
-				// console.log($this.find('.dropdown-layer').data('height'));
-				$.getJSON(dataLoad, function(data){
-					setTimeout(function(){
-						for (var i=0; i<data.length; i++ ){
-							html += '<li><a href="' + data[i].url + '" target="_blank" class="menu-item">'+ data[i].name +'</a></li>'
-						}
-						$layer.html(html);
-						$this.data('loaded', true);
-						$this.find('.dropdown-layer').data('height',true);
-						// console.log($this.find('.dropdown-layer').data('height'));
-					},1000);
+		// 	if(!$this.data('loaded')){
+		// 		var $layer = $(this).find('.dropdown-layer'),
+		// 			html = '';
+		// 		// console.log($this.find('.dropdown-layer').data('height'));
+		// 		$.getJSON(dataLoad, function(data){
+		// 			setTimeout(function(){
+		// 				for (var i=0; i<data.length; i++ ){
+		// 					html += '<li><a href="' + data[i].url + '" target="_blank" class="menu-item">'+ data[i].name +'</a></li>'
+		// 				}
+		// 				$layer.html(html);
+		// 				$this.data('loaded', true);
+		// 				$this.find('.dropdown-layer').data('height',true);
+		// 				// console.log($this.find('.dropdown-layer').data('height'));
+		// 			},1000);
 					
-				})
-			}
+		// 		})
+		// 	}
 			
-		})
+		// })
 
-	$('.dropdown').dropdown({
+	function loadOnce($elem, success) {
+        var dataLoad = $elem.data('load');
+
+        if (!dataLoad) return;
+
+        if (!$elem.data('loaded')) {
+            $elem.data('loaded', true);
+            $.getJSON(dataLoad).done(function(data) {
+                if (typeof success === 'function') success($elem, data);
+            }).fail(function() {
+                $elem.data('loaded', false);
+            });
+        }
+    }
+
+    function buildMenuItem($elem, data) {
+
+        var html = "";
+        if (data.length === 0) return;
+        for (var i = 0; i < data.length; i++) {
+            html += '<li><a href="' + data[i].url + '" target="_blank" class="menu-item">' + data[i].name + '</a></li>'
+        }
+        $elem.find('.dropdown-layer').html(html);
+    }
+
+	$('.menu').on('dropdown-show', function(){
+		loadOnce($(this), buildMenuItem);
+	});
+
+	$('.menu').dropdown({
 		css3: true,
 		js: false,
 		animation: 'slideUpDown',
@@ -103,31 +132,7 @@
 
 
     });
-    function loadOnce($elem, success) {
-        var dataLoad = $elem.data('load');
-
-        if (!dataLoad) return;
-
-        if (!$elem.data('loaded')) {
-            $elem.data('loaded', true);
-            $.getJSON(dataLoad).done(function(data) {
-                if (typeof success === 'function') success($elem, data);
-            }).fail(function() {
-                $elem.data('loaded', false);
-            });
-        }
-    }
-
-    function buildMenuItem($elem, data) {
-
-        var html = "";
-        if (data.length === 0) return;
-        for (var i = 0; i < data.length; i++) {
-            html += '<li><a href="' + data[i].url + '" target="_blank" class="menu-item">' + data[i].name + '</a></li>'
-        }
-        $elem.find('.dropdown-layer').html(html);
-
-    }
+    
 
 
     function buildCartItem($elem, data) {
@@ -174,5 +179,36 @@
         $cartTotalNum.html(totalNum);
         $cartTotalPrice.html('￥' + totalPrice);
     };
+
+    // category
+    $('#focus-category').find('.dropdown')
+    	.on('dropdown-show', function(){
+    		loadOnce($(this), buildCategoryDetails);
+    	})
+    	.dropdown({
+	    	css3: true,
+	    	js: false
+	    	// animation: 'fadeSlideLeftRight'
+	    });
+
+    function buildCategoryDetails($elem, data){
+    	var html = '';
+
+    	for (var i = 0; i < data.length; i++) {            
+            
+            html += '<dl class="category-details cf"><dt class="category-details-title fl"><a href="###" target="_blank" class="category-details-title-link">' + data[i].title + '</a></dt><dd class="category-details-item fl">';
+
+            for (var j = 0; j < data[i].items.length; j++) {
+                
+                html += '<a href="###" target="_blank" class="link">' + data[i].items[j] + '</a>';
+            }
+
+            html += '</dd></dl>';
+        }
+        // setTimeout(function () {
+            $elem.find('.dropdown-layer').html(html);
+        // },1000);
+
+    }
 })(jQuery)
 
