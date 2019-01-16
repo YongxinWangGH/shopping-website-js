@@ -63,7 +63,7 @@ form{
 	.focus {
 		width: 100%;
 		height: 504px;
-		background-color: #eee;
+		background-color: #fff;
 		margin-bottom: 8px;
 	}
 
@@ -119,4 +119,18 @@ form{
 		background: url(../img/focus-ad.png) no-repeat;
 		background-size: cover;
 	}
+	.focus .slider{
+		margin-left: 8px;
+	}
+
+	/*todays*/
+    .todays .slider{
+    	width:100%;
+    	height:158px;
+    }
+
+    .todays .slider-img{
+    	width:240px;
+
+    }
 
