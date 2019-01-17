@@ -518,3 +518,8 @@ input{
         .slider-slide .slider-item {
             float: left;
         }*/
+
+    .tab-panel {
+        display: block;
+        
+    }
