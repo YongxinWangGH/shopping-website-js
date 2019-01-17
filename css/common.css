@@ -520,6 +520,6 @@ input{
         }*/
 
     .tab-panel {
-        display: block;
+        display: none;
         
     }

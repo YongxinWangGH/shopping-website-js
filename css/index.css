@@ -181,6 +181,7 @@ form{
 	}
 	.floor-item-name {
 		margin-top: 24px;
+		line-height:16px;
 	}
 	.floor-item-name .link {
 		color: #07111b;

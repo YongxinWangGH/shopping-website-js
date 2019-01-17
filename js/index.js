@@ -256,7 +256,24 @@
                 interval: 0
             });
 
+        //floor
+         var $floor=$('.floor');
 
+         $floor.on('tab-show tab-shown tab-hide tab-hidden',function (e,type,index,elem) {
+             console.log(type);
+             console.log(index);
+             console.log(elem);
+
+         });
+         $floor.tab({
+             event:'mouseenter',// mouseenter或click
+             css3:false,
+             js:false,
+             animation:'fade',
+             activeIndex:0,
+             interval:0,
+             delay:0
+         });
 
 
         // var $focusSlider = $('#focus-slider');
