@@ -31,7 +31,7 @@
         this.$items.removeClass('tab-item-active');
         this.$items.eq(this.curIndex).addClass('tab-item-active');
         this.$panels.eq(this.curIndex).show();
-
+        this.$elem.trigger('tab-show', [this.curIndex, this.$panels[this.curIndex]]);
 
         // trigger event
         this.$panels.on('show shown hide hidden', function(e) {
