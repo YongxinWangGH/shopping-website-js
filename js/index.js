@@ -197,7 +197,7 @@
              $elem.loadedItemNum = 0;
              $elem.totalItemNum = $elem.find('.slider-img').length;
              $elem.on('slider-show', $elem.loadItem = function(e, index, elem) {
-                 console.log(1);
+                 // console.log(1);
                  if ($elem.items[index] !== 'loaded') {
                      $elem.trigger('slider-loadItem', [index, elem]);
                  }
@@ -211,7 +211,7 @@
                          $img.attr('src', url);
                          $elem.items[index] = 'loaded';
                          $elem.loadedItemNum++;
-                         console.log(index + ': loaded');
+                         // console.log(index + ': loaded');
                          if ($elem.loadedItemNum === $elem.totalItemNum) {
                              // 全部加载完毕
                              $elem.trigger('slider-itemsLoaded');
@@ -227,7 +227,7 @@
              });
 
              $elem.on('slider-itemsLoaded', function(e) {
-                 console.log('itemsLoaded');
+                 // console.log('itemsLoaded');
                  // 清除事件
                  $elem.off('slider-show', $elem.loadItem);
              });
@@ -279,9 +279,9 @@
                      slider.loadImg($img.data('src'), function(url) {
                          $img.attr('src', url);
                          items[index] = 'loaded';
-                         console.log(items[index]);
+                         // console.log(items[index]);
                          loadedItemNum++;
-                         console.log(index + ': loaded');
+                         // console.log(index + ': loaded');
                          if (loadedItemNum === totalItemNum) {
                              // 全部加载完毕
                              $elem.trigger('tab-itemsLoaded');
@@ -297,7 +297,7 @@
              });
 
              $elem.on('tab-itemsLoaded', function(e) {
-                 console.log('tab-itemsLoaded');
+                 // console.log('tab-itemsLoaded');
                  // 清除事件
                  $elem.off('tab-show', loadItemFn);
              });
@@ -941,7 +941,7 @@
              loadItemFn=null;                        
              
              $doc.on('floor-show', loadItemFn = function(e, index, elem) {
-                 console.log(1);
+                 // console.log(1);
                  if (items[index] !== 'loaded') {
                      $doc.trigger('floors-loadItem', [index, elem]);
                  }
@@ -951,9 +951,9 @@
                      $elem=$(elem);                
                         
                          items[index] = 'loaded';
-                         console.log(items[index]);
+                         // console.log(items[index]);
                          loadedItemNum++;
-                         console.log(index + ': loaded');
+                         // console.log(index + ': loaded');
                          if (loadedItemNum === totalItemNum) {
                              // 全部加载完毕
                              $doc.trigger('floors-itemsLoaded');
@@ -977,7 +977,7 @@
              });
 
              $doc.on('floors-itemsLoaded', function(e) {
-                 console.log('floors-itemsLoaded');
+                 // console.log('floors-itemsLoaded');
                  // 清除事件
                  $doc.off('floor-show', loadItemFn);
                  $win.off('scroll resize', timeToShow);
@@ -1056,6 +1056,50 @@
     lazyLoadFloor();
 
     timeToShow();
+
+    // elevator
+    function whichFloor(){
+      var num = 1;
+
+      $floor.each(function(index, elem){
+        num = index;
+
+        if($win.scrollTop() + $win.height()/2 < $(elem).offset().top){
+          num = index - 1;
+          return false;
+        }
+      });
+
+      return num;
+    };
+
+    var $elevator = $('#elevator'),
+        $elevatorItems = $elevator.find('.elevator-item');
+
+    function setElevator(){
+      var num = whichFloor();
+      console.log(num);
+      if(num === -1){
+        $elevator.fadeOut();
+      }else{
+        $elevator.fadeIn();
+        $elevatorItems.removeClass('elevator-active');
+        $elevatorItems.eq(num).addClass('elevator-active');
+      }
+    };
+
+    setElevator();
+
+    $win.on('scroll resize', function(){
+      setElevator();
+    })
+
+    $elevator.on('click', '.elevator-item', function(){
+      $('html, body').animate({
+        // scrollTop: $floor[$(this).index()].offset().top 
+        scrollTop: $floor.eq($(this).index()).offset().top 
+      });
+    })
     
 
 })(jQuery);
