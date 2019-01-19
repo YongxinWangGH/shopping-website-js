@@ -34,31 +34,33 @@
             css3: true,
             js: false
         });
+       
+        dropdown.buildCartItem = function($elem, data) {
 
-
-        dropdown.buildCartItem=function($elem, data) {
-
-            var html = "";
-            if (data.length === 0) { // no goods
-                html += '<div class="cart-nogoods"><i class="icon cart-nogoods-icon fl">&#xe600;</i><div class="cart-nogoods-text fl">购物车里还没有商品<br />赶紧去选购吧！</div></div>';
-                $elem.find('.dropdown-layer').html(html);
-                return;
-            }
-
-            html += '<h4 class="cart-title">最新加入的商品</h4><ul class="cart-list">';
-
-            for (var i = 0; i < data.length; i++) {
-                html += '<li class="cart-item"><a href="###" target="_blank" class="cart-item-pic fl"><img src="' + data[i].pic + '" alt="" /></a><div class="fl"><p class="cart-item-name text-ellipsis"><a href="###" target="_blank" class="link">' + data[i].name + '</a></p><p class="cart-item-price"><strong>￥' + data[i].price + ' x ' + data[i].num + '</strong></p></div><a href="javascript:;" title="删除" class="cart-item-delete link fr">X</a></li>';
-            }
-
-            html += '</ul><div class="cart-info"><span class="fl">共 <strong class="cart-total-num">0</strong> 件商品　共计<strong class="cart-total-price">￥ 0.00</strong></span><a href="###" target="_blank" class="cart-info-btn btn fr">去购物车</a></div>';
-
-            // setTimeout(function(){
+        var html = "";
+        if (data.length === 0) { // no goods
+            html += '<div class="cart-nogoods"><i class="icon cart-nogoods-icon fl">&#xe600;</i><div class="cart-nogoods-text fl">No items selected yet<br />continue shopping</div></div>';
             $elem.find('.dropdown-layer').html(html);
-            // },1000);
-        };
+            return;
+        }
 
-        function updateCart($elem, data) {
+        html += '<h4 class="cart-title">Products details</h4><ul class="cart-list">';
+        var subtotal = 0;
+        for (var i = 0; i < data.length; i++) {         
+            html += '<li class="cart-item"><a href="###" target="_blank" class="cart-item-pic fl"><img src="' + data[i].pic + '" alt="" /></a><div class="fl"><p class="cart-item-name text-ellipsis"><a href="###" target="_blank" class="link">' + data[i].name + '</a></p><p class="cart-item-price"><strong>$' + data[i].price + ' x ' + data[i].num + '</strong></p></div><a href="javascript:;" title="remove" class="cart-item-delete link fr">X</a></li>';
+          subtotal +=(data[i].price*data[i].num);
+        }
+
+        html += '</ul><div class="cart-info"><span class="fl">Subtotal: <strong class="cart-total-price">$'+subtotal+'</strong></span><a href="###" target="_blank" class="cart-info-btn btn fr">Check Out</a></div>';
+
+        setTimeout(function(){
+            $elem.find('.dropdown-layer').html(html);
+        },1000);
+    }
+    
+        
+
+        dropdown.updateCart = function($elem, data) {
             var $cartNum = $elem.find('.cart-num'),
                 $cartTotalNum = $elem.find('.cart-total-num'),
                 $cartTotalPrice = $elem.find('.cart-total-price'),
@@ -77,7 +79,7 @@
 
             $cartNum.html(totalNum);
             $cartTotalNum.html(totalNum);
-            $cartTotalPrice.html('￥' + totalPrice);
+            $cartTotalPrice.html('$' + totalPrice);
         };
 
 
@@ -87,24 +89,24 @@
         search.$headerSearch.html = '';
         search.$headerSearch.maxNum = 10;
 
-        // 获得数据处理
+        // get search results from ebay
         search.$headerSearch.on('search-getData', function(e, data) {
             var $this = $(this);
             search.$headerSearch.html = search.$headerSearch.createHeaderSearchLayer(data, search.$headerSearch.maxNum);
-            $this.search('appendLayer', html);
-            // 将生成的html呈现在页面中        
-            if (html) {
+            $this.search('appendLayer', search.$headerSearch.html);
+            // show the html on the web page        
+            if (search.$headerSearch.html) {
                 $this.search('showLayer');
             } else {
                 $this.search('hideLayer');
 
             }
         }).on('search-noData', function(e) {
-            // 没获得数据处理
+            // got no results back
             $(this).search('hideLayer').search('appendLayer', '');
 
         }).on('click', '.search-layer-item', function() {
-            // 点击每项时，提交
+            // click on each search result
             search.$headerSearch.search('setInputVal', $(this).html());
             search.$headerSearch.search('submit');
         });
@@ -117,22 +119,25 @@
             getDataInterval: 0
         });
 
-        // 获取数据，生成html
+        // get results 
+        search.$headerSearch.createHeaderSearchLayer = function(data, maxNum){
+          var html = '',         
+              dataNum = data['res']['sug'].length;
+            // console.log(data['res']['sug']);
+          if(dataNum === 0){
+            return '';
+          }
 
-        search.$headerSearch.createHeaderSearchLayer= function (data, maxNum) {
-            var html = '',
-                dataNum = data['result'].length;
-
-            if (dataNum === 0) {
-                return '';
-            }
-            for (var i = 0; i < dataNum; i++) {
-                if (i >= maxNum) break;
-                html += '<li class="search-layer-item text-ellipsis">' + data['result'][i][0] + '</li>';
-            }
-            return html;
-
+          for(var i = 0; i < dataNum; i++){
+            if(i >= maxNum) break;
+            html += '<li class="search-layer-item text-ellipsis">' + data['res']['sug'][i] + '</li>';
+            // console.log(html);
+          }
+          
+          // console.log(html);
+          return html;
         };
+
 
         // focus-category
 
@@ -203,9 +208,9 @@
                  }
              });
              $elem.on('slider-loadItem', function(e, index, elem) {
-                 // 按需加载
+             
                  var $imgs = $(elem).find('.slider-img');
-                 $imgs.each(function(_, el) { // _ 相当占位，不使用该参数。
+                 $imgs.each(function(_, el) { 
                      var $img = $(el);
                      slider.loadImg($img.data('src'), function(url) {
                          $img.attr('src', url);
@@ -213,13 +218,12 @@
                          $elem.loadedItemNum++;
                          // console.log(index + ': loaded');
                          if ($elem.loadedItemNum === $elem.totalItemNum) {
-                             // 全部加载完毕
+                             // all the stuff has been loaded
                              $elem.trigger('slider-itemsLoaded');
                          }
                      }, function(url) {
-                         console.log('从' + url + '加载图片失败');
-                         // 多加载一次
-                         // 显示备用图片
+                         console.log('Failed to download images from ' + url);
+                         
                          $img.attr('src', 'img/focus-slider/placeholder.png');
                      });
                  });
@@ -228,7 +232,7 @@
 
              $elem.on('slider-itemsLoaded', function(e) {
                  // console.log('itemsLoaded');
-                 // 清除事件
+                 // removes the event handler loadItem
                  $elem.off('slider-show', $elem.loadItem);
              });
 
@@ -272,9 +276,9 @@
                  }
              });
              $elem.on('tab-loadItem', function(e, index, elem) {
-                 // 按需加载
+       
                  var $imgs = $(elem).find('.floor-img');
-                 $imgs.each(function(_, el) { // _ 相当占位，不使用该参数。
+                 $imgs.each(function(_, el) { 
                      var $img = $(el);
                      slider.loadImg($img.data('src'), function(url) {
                          $img.attr('src', url);
@@ -283,13 +287,12 @@
                          loadedItemNum++;
                          // console.log(index + ': loaded');
                          if (loadedItemNum === totalItemNum) {
-                             // 全部加载完毕
+                     
                              $elem.trigger('tab-itemsLoaded');
                          }
                      }, function(url) {
-                         console.log('从' + url + '加载图片失败');
-                         // 多加载一次
-                         // 显示备用图片
+                         console.log('Failed to download images from ' + url);
+                    
                          $img.attr('src', 'img/floor/placeholder.png');
                      });
                  });
@@ -298,7 +301,7 @@
 
              $elem.on('tab-itemsLoaded', function(e) {
                  // console.log('tab-itemsLoaded');
-                 // 清除事件
+      
                  $elem.off('tab-show', loadItemFn);
              });
 
@@ -311,15 +314,15 @@
 
 
 
-    //  $floor.tab({
-    //      event:'mouseenter',// mouseenter或click
-    //      css3:false,
-    //      js:false,
-    //      animation:'fade',
-    //      activeIndex:0,
-    //      interval:0,
-    //      delay:0
-    //  });
+     // $floor.tab({
+     //     event:'mouseenter',// mouseenter或click
+     //     css3:false,
+     //     js:false,
+     //     animation:'fade',
+     //     activeIndex:0,
+     //     interval:0,
+     //     delay:0
+     // });
 
 
     
@@ -577,7 +580,7 @@
                         name: 'MOTOROLA Moto Z Play 64G 128G',
                         price: 958
                     }, {
-                        name: 'Apple iPhone 7 (A1660)',
+                        name: 'Apple iPhone 7 (A1660) 64GB (Clearly Pink)',
                         price: 1856
                     }, {
                         name: 'Apple iPhone 7 64G 128G 256G (A1660)',
@@ -615,7 +618,7 @@
                         name: 'MOTOROLA Moto Z Play 64G 128G',
                         price: 958
                     }, {
-                        name: 'Apple iPhone 7 (A1660)',
+                        name: 'Apple iPhone 7 (A1660) 64GB (Clearly Pink)',
                         price: 1856
                     }, {
                         name: 'Apple iPhone 7 64G 128G 256G (A1660)',
@@ -653,7 +656,7 @@
                         name: 'MOTOROLA Moto Z Play 64G 128G',
                         price: 958
                     }, {
-                        name: 'Apple iPhone 7 (A1660)',
+                        name: 'Apple iPhone 7 (A1660) 64GB (Clearly Pink)',
                         price: 1856
                     }, {
                         name: 'Apple iPhone 7 64G 128G 256G (A1660)',
@@ -938,7 +941,7 @@
              var items = {},
              loadedItemNum = 0,
              totalItemNum = $floor.length,
-             loadItemFn=null;                        
+             loadItemFn = null;                        
              
              $doc.on('floor-show', loadItemFn = function(e, index, elem) {
                  // console.log(1);
@@ -955,7 +958,7 @@
                          loadedItemNum++;
                          // console.log(index + ': loaded');
                          if (loadedItemNum === totalItemNum) {
-                             // 全部加载完毕
+              
                              $doc.trigger('floors-itemsLoaded');
                          }
 
@@ -963,7 +966,7 @@
                              $elem.html(html); 
                              lazyLoadFloorImgs($elem);
                              $elem.tab({
-                                 event:'mouseenter',// mouseenter或click
+                                 event:'mouseenter',// mouseenter or click
                                  css3:false,
                                  js:false,
                                  animation:'fade',
@@ -978,7 +981,6 @@
 
              $doc.on('floors-itemsLoaded', function(e) {
                  // console.log('floors-itemsLoaded');
-                 // 清除事件
                  $doc.off('floor-show', loadItemFn);
                  $win.off('scroll resize', timeToShow);
              });
@@ -1013,6 +1015,8 @@
         return html;
     }; 
 
+    
+
     function buildFloorBody(floorData) {
         var html = '';
         html += '<div class="floor-body">';
@@ -1022,7 +1026,7 @@
                 html += '<li class="floor-item fl">';
                 html += '<p class="floor-item-pic"><a href="###" target="_blank"><img src="img/floor/loading.gif" class="floor-img" data-src="img/floor/' + floorData.num + '/' + (i + 1) + '/' + (j + 1) + '.png" alt="" /></a></p>';
                 html += '<p class="floor-item-name"><a href="###" target="_blank" class="link">' + floorData.items[i][j].name + '</a></p>';
-                html += '<p class="floor-item-price">' + floorData.items[i][j].price + '</p>';
+                html += '<p class="floor-item-price">$' + floorData.items[i][j].price + '</p>';
                 html += '</li>';
             }
 
@@ -1036,6 +1040,7 @@
 
 
 
+
     var $win=$(window);
     var $doc=$(document);
     function isVisible($elem) {
@@ -1043,7 +1048,7 @@
     }
 
     function timeToShow() {
-        console.log('time to show');
+        // console.log('time to show');
         $floor.each(function (index,elem) {
             if(isVisible($(elem))){
                 // console.log('the'+(index+1)+'floor is visible');
@@ -1056,6 +1061,14 @@
     lazyLoadFloor();
 
     timeToShow();
+
+
+
+
+   
+
+
+  
 
     // elevator
     function whichFloor(){

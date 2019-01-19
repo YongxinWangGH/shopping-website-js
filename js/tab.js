@@ -35,7 +35,7 @@
 
         // trigger event
         this.$panels.on('show shown hide hidden', function(e) {
-            self.$elem.trigger('tab-' + e.type, [e.type, self.$panels.index(this), this]);
+            self.$elem.trigger('tab-' + e.type, [self.$panels.index(this), this]);
         });
 
         // showHide init

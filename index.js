@@ -34,31 +34,33 @@
             css3: true,
             js: false
         });
+       
+        dropdown.buildCartItem = function($elem, data) {
 
-
-        dropdown.buildCartItem=function($elem, data) {
-
-            var html = "";
-            if (data.length === 0) { // no goods
-                html += '<div class="cart-nogoods"><i class="icon cart-nogoods-icon fl">&#xe600;</i><div class="cart-nogoods-text fl">购物车里还没有商品<br />赶紧去选购吧！</div></div>';
-                $elem.find('.dropdown-layer').html(html);
-                return;
-            }
-
-            html += '<h4 class="cart-title">最新加入的商品</h4><ul class="cart-list">';
-
-            for (var i = 0; i < data.length; i++) {
-                html += '<li class="cart-item"><a href="###" target="_blank" class="cart-item-pic fl"><img src="' + data[i].pic + '" alt="" /></a><div class="fl"><p class="cart-item-name text-ellipsis"><a href="###" target="_blank" class="link">' + data[i].name + '</a></p><p class="cart-item-price"><strong>￥' + data[i].price + ' x ' + data[i].num + '</strong></p></div><a href="javascript:;" title="删除" class="cart-item-delete link fr">X</a></li>';
-            }
-
-            html += '</ul><div class="cart-info"><span class="fl">共 <strong class="cart-total-num">0</strong> 件商品　共计<strong class="cart-total-price">￥ 0.00</strong></span><a href="###" target="_blank" class="cart-info-btn btn fr">去购物车</a></div>';
-
-            // setTimeout(function(){
+        var html = "";
+        if (data.length === 0) { // no goods
+            html += '<div class="cart-nogoods"><i class="icon cart-nogoods-icon fl">&#xe600;</i><div class="cart-nogoods-text fl">No items selected yet<br />continue shopping</div></div>';
             $elem.find('.dropdown-layer').html(html);
-            // },1000);
-        };
+            return;
+        }
 
-        function updateCart($elem, data) {
+        html += '<h4 class="cart-title">Products details</h4><ul class="cart-list">';
+        var subtotal = 0;
+        for (var i = 0; i < data.length; i++) {         
+            html += '<li class="cart-item"><a href="###" target="_blank" class="cart-item-pic fl"><img src="' + data[i].pic + '" alt="" /></a><div class="fl"><p class="cart-item-name text-ellipsis"><a href="###" target="_blank" class="link">' + data[i].name + '</a></p><p class="cart-item-price"><strong>$' + data[i].price + ' x ' + data[i].num + '</strong></p></div><a href="javascript:;" title="remove" class="cart-item-delete link fr">X</a></li>';
+          subtotal +=(data[i].price*data[i].num);
+        }
+
+        html += '</ul><div class="cart-info"><span class="fl">Subtotal: <strong class="cart-total-price">$'+subtotal+'</strong></span><a href="###" target="_blank" class="cart-info-btn btn fr">Check Out</a></div>';
+
+        setTimeout(function(){
+            $elem.find('.dropdown-layer').html(html);
+        },1000);
+    }
+    
+        
+
+        dropdown.updateCart = function($elem, data) {
             var $cartNum = $elem.find('.cart-num'),
                 $cartTotalNum = $elem.find('.cart-total-num'),
                 $cartTotalPrice = $elem.find('.cart-total-price'),
@@ -77,7 +79,7 @@
 
             $cartNum.html(totalNum);
             $cartTotalNum.html(totalNum);
-            $cartTotalPrice.html('￥' + totalPrice);
+            $cartTotalPrice.html('$' + totalPrice);
         };
 
 
@@ -87,24 +89,24 @@
         search.$headerSearch.html = '';
         search.$headerSearch.maxNum = 10;
 
-        // 获得数据处理
+        // get search results from ebay
         search.$headerSearch.on('search-getData', function(e, data) {
             var $this = $(this);
             search.$headerSearch.html = search.$headerSearch.createHeaderSearchLayer(data, search.$headerSearch.maxNum);
-            $this.search('appendLayer', html);
-            // 将生成的html呈现在页面中        
-            if (html) {
+            $this.search('appendLayer', search.$headerSearch.html);
+            // show the html on the web page        
+            if (search.$headerSearch.html) {
                 $this.search('showLayer');
             } else {
                 $this.search('hideLayer');
 
             }
         }).on('search-noData', function(e) {
-            // 没获得数据处理
+            // got no results back
             $(this).search('hideLayer').search('appendLayer', '');
 
         }).on('click', '.search-layer-item', function() {
-            // 点击每项时，提交
+            // click on each search result
             search.$headerSearch.search('setInputVal', $(this).html());
             search.$headerSearch.search('submit');
         });
@@ -117,22 +119,25 @@
             getDataInterval: 0
         });
 
-        // 获取数据，生成html
+        // get results 
+        search.$headerSearch.createHeaderSearchLayer = function(data, maxNum){
+          var html = '',         
+              dataNum = data['res']['sug'].length;
+            // console.log(data['res']['sug']);
+          if(dataNum === 0){
+            return '';
+          }
 
-        search.$headerSearch.createHeaderSearchLayer= function (data, maxNum) {
-            var html = '',
-                dataNum = data['result'].length;
-
-            if (dataNum === 0) {
-                return '';
-            }
-            for (var i = 0; i < dataNum; i++) {
-                if (i >= maxNum) break;
-                html += '<li class="search-layer-item text-ellipsis">' + data['result'][i][0] + '</li>';
-            }
-            return html;
-
+          for(var i = 0; i < dataNum; i++){
+            if(i >= maxNum) break;
+            html += '<li class="search-layer-item text-ellipsis">' + data['res']['sug'][i] + '</li>';
+            // console.log(html);
+          }
+          
+          // console.log(html);
+          return html;
         };
+
 
         // focus-category
 
@@ -186,10 +191,10 @@
                 image.onload = function() {
                     if (typeof imgLoaded === 'function') imgLoaded(url);
                 };
-                image.src=url;     
-                // setTimeout(function() {
-                //     image.src = url;
-                // }, 1000);
+                // image.src=url;     
+                setTimeout(function() {
+                    image.src = url;
+                }, 1000);
             };
 
         slider.lazyLoad = function($elem) {
@@ -197,38 +202,37 @@
              $elem.loadedItemNum = 0;
              $elem.totalItemNum = $elem.find('.slider-img').length;
              $elem.on('slider-show', $elem.loadItem = function(e, index, elem) {
-                 console.log(1);
+                 // console.log(1);
                  if ($elem.items[index] !== 'loaded') {
                      $elem.trigger('slider-loadItem', [index, elem]);
                  }
              });
              $elem.on('slider-loadItem', function(e, index, elem) {
-                 // 按需加载
+             
                  var $imgs = $(elem).find('.slider-img');
-                 $imgs.each(function(_, el) { // _ 相当占位，不使用该参数。
+                 $imgs.each(function(_, el) { 
                      var $img = $(el);
                      slider.loadImg($img.data('src'), function(url) {
                          $img.attr('src', url);
                          $elem.items[index] = 'loaded';
                          $elem.loadedItemNum++;
-                         console.log(index + ': loaded');
+                         // console.log(index + ': loaded');
                          if ($elem.loadedItemNum === $elem.totalItemNum) {
-                             // 全部加载完毕
+                             // all the stuff has been loaded
                              $elem.trigger('slider-itemsLoaded');
                          }
                      }, function(url) {
                          console.log('从' + url + '加载图片失败');
-                         // 多加载一次
-                         // 显示备用图片
-                         $img.attr('src', '../img/focus-slider/placeholder.png');
+                         
+                         $img.attr('src', 'img/focus-slider/placeholder.png');
                      });
                  });
 
              });
 
              $elem.on('slider-itemsLoaded', function(e) {
-                 console.log('itemsLoaded');
-                 // 清除事件
+                 // console.log('itemsLoaded');
+                 // removes the event handler loadItem
                  $elem.off('slider-show', $elem.loadItem);
              });
 
@@ -256,29 +260,8 @@
                 interval: 0
             });
 
-        //floor
-         // var $floor=$('.floor');
-
-         // $floor.on('tab-show tab-shown tab-hide tab-hidden',function (e,type,index,elem) {
-         //     console.log(type);
-         //     console.log(index);
-         //     console.log(elem);
-
-         // });
-         // $floor.tab({
-         //     event:'mouseenter',// mouseenter或click
-         //     css3:false,
-         //     js:false,
-         //     animation:'fade',
-         //     activeIndex:0,
-         //     interval:0,
-         //     delay:0
-         // });
-
-
-        
-
-    var $floor=$('.floor');
+     //floor
+     var $floor=$('.floor');
 
      function lazyLoadFloorImgs($elem) {
              var items = {},
@@ -293,24 +276,23 @@
                  }
              });
              $elem.on('tab-loadItem', function(e, index, elem) {
-                 // 按需加载
+       
                  var $imgs = $(elem).find('.floor-img');
-                 $imgs.each(function(_, el) { // _ 相当占位，不使用该参数。
+                 $imgs.each(function(_, el) { 
                      var $img = $(el);
                      slider.loadImg($img.data('src'), function(url) {
                          $img.attr('src', url);
                          items[index] = 'loaded';
-                         console.log(items[index]);
+                         // console.log(items[index]);
                          loadedItemNum++;
-                         console.log(index + ': loaded');
+                         // console.log(index + ': loaded');
                          if (loadedItemNum === totalItemNum) {
-                             // 全部加载完毕
+                     
                              $elem.trigger('tab-itemsLoaded');
                          }
                      }, function(url) {
                          console.log('从' + url + '加载图片失败');
-                         // 多加载一次
-                         // 显示备用图片
+                    
                          $img.attr('src', 'img/floor/placeholder.png');
                      });
                  });
@@ -318,631 +300,651 @@
              });
 
              $elem.on('tab-itemsLoaded', function(e) {
-                 console.log('tab-itemsLoaded');
-                 // 清除事件
+                 // console.log('tab-itemsLoaded');
+      
                  $elem.off('tab-show', loadItemFn);
              });
 
     }
 
+    // $floor.each(function (_,elem) {
+
+    //     lazyLoadFloorImgs($(elem));
+    // });
+
+
+
+    //  $floor.tab({
+    //      event:'mouseenter',// mouseenter或click
+    //      css3:false,
+    //      js:false,
+    //      animation:'fade',
+    //      activeIndex:0,
+    //      interval:0,
+    //      delay:0
+    //  });
+
+
+    
+
     var floorData = [
-            {
-                num: '1',
-                text: '服装鞋包',
-                tabs: ['大牌', '男装', '女装'],
-                items: [
-                    [
-                        {
-                            name: '匡威男棒球开衫外套2015',
-                            price: 479
-                        }, {
-                            name: 'adidas 阿迪达斯 训练 男子',
-                            price: 335
-                        }, {
-                            name: '必迈BMAI一体织跑步短袖T恤',
-                            price: 159
-                        }, {
-                            name: 'NBA袜子半毛圈运动高邦棉袜',
-                            price: 65
-                        }, {
-                            name: '特步官方运动帽男女帽子2016',
-                            price: 69
-                        }, {
-                            name: 'KELME足球训练防寒防风手套',
-                            price: 4999
-                        }, {
-                            name: '战地吉普三合一冲锋衣',
-                            price: 289
-                        }, {
-                            name: '探路者户外男士徒步鞋',
-                            price: 369
-                        }, {
-                            name: '羽绒服2015秋冬新款轻薄男士',
-                            price: 399
-                        }, {
-                            name: '溯溪鞋涉水鞋户外鞋',
-                            price: 689
-                        }, {
-                            name: '旅行背包多功能双肩背包',
-                            price: 269
-                        }, {
-                            name: '户外旅行双肩背包OS0099',
-                            price: 99
-                        }
-                    ], [
-                        {
-                            name: '匡威男棒球开衫外套2015',
-                            price: 479
-                        }, {
-                            name: 'adidas 阿迪达斯 训练 男子',
-                            price: 335
-                        }, {
-                            name: '必迈BMAI一体织跑步短袖T恤',
-                            price: 159
-                        }, {
-                            name: 'NBA袜子半毛圈运动高邦棉袜',
-                            price: 65
-                        }, {
-                            name: '特步官方运动帽男女帽子2016',
-                            price: 69
-                        }, {
-                            name: 'KELME足球训练防寒防风手套',
-                            price: 4999
-                        }, {
-                            name: '战地吉普三合一冲锋衣',
-                            price: 289
-                        }, {
-                            name: '探路者户外男士徒步鞋',
-                            price: 369
-                        }, {
-                            name: '羽绒服2015秋冬新款轻薄男士',
-                            price: 399
-                        }, {
-                            name: '溯溪鞋涉水鞋户外鞋',
-                            price: 689
-                        }, {
-                            name: '旅行背包多功能双肩背包',
-                            price: 269
-                        }, {
-                            name: '户外旅行双肩背包OS0099',
-                            price: 99
-                        }
-                    ], [
-                        {
-                            name: '匡威男棒球开衫外套2015',
-                            price: 479
-                        }, {
-                            name: 'adidas 阿迪达斯 训练 男子',
-                            price: 335
-                        }, {
-                            name: '必迈BMAI一体织跑步短袖T恤',
-                            price: 159
-                        }, {
-                            name: 'NBA袜子半毛圈运动高邦棉袜',
-                            price: 65
-                        }, {
-                            name: '特步官方运动帽男女帽子2016',
-                            price: 69
-                        }, {
-                            name: 'KELME足球训练防寒防风手套',
-                            price: 4999
-                        }, {
-                            name: '战地吉普三合一冲锋衣',
-                            price: 289
-                        }, {
-                            name: '探路者户外男士徒步鞋',
-                            price: 369
-                        }, {
-                            name: '羽绒服2015秋冬新款轻薄男士',
-                            price: 399
-                        }, {
-                            name: '溯溪鞋涉水鞋户外鞋',
-                            price: 689
-                        }, {
-                            name: '旅行背包多功能双肩背包',
-                            price: 269
-                        }, {
-                            name: '户外旅行双肩背包OS0099',
-                            price: 99
-                        }
-                    ]
+        {
+            num: '1',
+            text: 'Clothing',
+            tabs: ['Style', 'Men', 'Women'],
+            items: [
+                [
+                    {
+                        name: 'Converse men cardigan coat',
+                        price: 479
+                    }, {
+                        name: 'Adidas trains men',
+                        price: 335
+                    }, {
+                        name: 'BMAI knitted running T-shirt',
+                        price: 159
+                    }, {
+                        name: 'NBA half loop sport cotton socks',
+                        price: 65
+                    }, {
+                        name: 'Xtep official sports hats',
+                        price: 69
+                    }, {
+                        name: 'KELME windproof gloves',
+                        price: 99
+                    }, {
+                        name: 'Battlefield jeeps stormjacket',
+                        price: 289
+                    }, {
+                        name: 'Pathfinder men hiking shoes',
+                        price: 369
+                    }, {
+                        name: 'Down jacket 2015 autumn winter',
+                        price: 399
+                    }, {
+                        name: 'Hiking shoes wading shoes',
+                        price: 89
+                    }, {
+                        name: 'Travel multi-functional backpack',
+                        price: 269
+                    }, {
+                        name: 'Outdoor travel backpack OS0099',
+                        price: 99
+                    }
+                ], [
+                    {
+                        name: 'Converse men\'s cardigan coat',
+                        price: 479
+                    }, {
+                        name: 'Battlefield jeeps stormjacket',
+                        price: 335
+                    }, {
+                        name: 'Pathfinder men\'s hiking shoes',
+                        price: 159
+                    }, {
+                        name: 'Down jacket 2015 autumn winter',
+                        price: 65
+                    }, {
+                        name: 'BMAI knitted running T-shirt',
+                        price: 69
+                    }, {
+                        name: 'NBA half loop sport cotton socks',
+                        price: 4999
+                    }, {
+                        name: 'Xtep official sports hats',
+                        price: 289
+                    }, {
+                        name: 'KELME windproof gloves',
+                        price: 369
+                    }, {
+                        name: 'Hiking shoes wading',
+                        price: 399
+                    }, {
+                        name: 'Pathfinder men\'s hiking shoes',
+                        price: 689
+                    }, {
+                        name: 'Down jacket 2015 autumn winter',
+                        price: 269
+                    }, {
+                        name: 'Outdoor travel backpack OS0099',
+                        price: 99
+                    }
+                ], [
+                    {
+                        name: 'Converse men cardigan coat',
+                        price: 479
+                    }, {
+                        name: 'Adidas trains men',
+                        price: 335
+                    }, {
+                        name: 'BMAI knitted running T-shirt',
+                        price: 159
+                    }, {
+                        name: 'NBA half loop sport cotton socks',
+                        price: 65
+                    }, {
+                        name: 'Xtep official sports hats',
+                        price: 69
+                    }, {
+                        name: 'KELME windproof gloves',
+                        price: 99
+                    }, {
+                        name: 'Battlefield jeeps stormjacket',
+                        price: 289
+                    }, {
+                        name: 'Pathfinder men hiking shoes',
+                        price: 369
+                    }, {
+                        name: 'Down jacket 2015 autumn winter',
+                        price: 399
+                    }, {
+                        name: 'Hiking shoes wading shoes',
+                        price: 89
+                    }, {
+                        name: 'Travel multi-functional backpack',
+                        price: 269
+                    }, {
+                        name: 'Outdoor travel backpack OS0099',
+                        price: 99
+                    }
                 ]
-            }, {
-                num: '2',
-                text: '个护美妆',
-                tabs: ['热门', '国际大牌', '国际名品'],
-                items: [
-                    [
-                        {
-                            name: '韩束红石榴鲜活水盈七件套装',
-                            price: 169
-                        }, {
-                            name: '温碧泉八杯水亲亲水润五件套装',
-                            price: 198
-                        }, {
-                            name: '御泥坊红酒透亮矿物蚕丝面膜贴',
-                            price: 79.9
-                        }, {
-                            name: '吉列手动剃须刀锋隐致护',
-                            price: 228
-                        }, {
-                            name: 'Mediheal水润保湿面膜',
-                            price: 119
-                        }, {
-                            name: '纳益其尔芦荟舒缓保湿凝胶',
-                            price: 39
-                        }, {
-                            name: '宝拉珍选基础护肤旅行四件套',
-                            price: 299
-                        }, {
-                            name: '温碧泉透芯润五件套装',
-                            price: 257
-                        }, {
-                            name: '玉兰油多效修护三部曲套装',
-                            price: 199
-                        }, {
-                            name: 'LOREAL火山岩控油清痘洁面膏',
-                            price: 36
-                        }, {
-                            name: '百雀羚水嫩倍现盈透精华水',
-                            price: 139
-                        }, {
-                            name: '珀莱雅新柔皙莹润三件套',
-                            price: 99
-                        }
-                    ], [
-                        {
-                            name: '韩束红石榴鲜活水盈七件套装',
-                            price: 169
-                        }, {
-                            name: '温碧泉八杯水亲亲水润五件套装',
-                            price: 198
-                        }, {
-                            name: '御泥坊红酒透亮矿物蚕丝面膜贴',
-                            price: 79.9
-                        }, {
-                            name: '吉列手动剃须刀锋隐致护',
-                            price: 228
-                        }, {
-                            name: 'Mediheal水润保湿面膜',
-                            price: 119
-                        }, {
-                            name: '纳益其尔芦荟舒缓保湿凝胶',
-                            price: 39
-                        }, {
-                            name: '宝拉珍选基础护肤旅行四件套',
-                            price: 299
-                        }, {
-                            name: '温碧泉透芯润五件套装',
-                            price: 257
-                        }, {
-                            name: '玉兰油多效修护三部曲套装',
-                            price: 199
-                        }, {
-                            name: 'LOREAL火山岩控油清痘洁面膏',
-                            price: 36
-                        }, {
-                            name: '百雀羚水嫩倍现盈透精华水',
-                            price: 139
-                        }, {
-                            name: '珀莱雅新柔皙莹润三件套',
-                            price: 99
-                        }
-                    ], [
-                        {
-                            name: '韩束红石榴鲜活水盈七件套装',
-                            price: 169
-                        }, {
-                            name: '温碧泉八杯水亲亲水润五件套装',
-                            price: 198
-                        }, {
-                            name: '御泥坊红酒透亮矿物蚕丝面膜贴',
-                            price: 79.9
-                        }, {
-                            name: '吉列手动剃须刀锋隐致护',
-                            price: 228
-                        }, {
-                            name: 'Mediheal水润保湿面膜',
-                            price: 119
-                        }, {
-                            name: '纳益其尔芦荟舒缓保湿凝胶',
-                            price: 39
-                        }, {
-                            name: '宝拉珍选基础护肤旅行四件套',
-                            price: 299
-                        }, {
-                            name: '温碧泉透芯润五件套装',
-                            price: 257
-                        }, {
-                            name: '玉兰油多效修护三部曲套装',
-                            price: 199
-                        }, {
-                            name: 'LOREAL火山岩控油清痘洁面膏',
-                            price: 36
-                        }, {
-                            name: '百雀羚水嫩倍现盈透精华水',
-                            price: 139
-                        }, {
-                            name: '珀莱雅新柔皙莹润三件套',
-                            price: 99
-                        }
-                    ]
+            ]
+        }, {
+            num: '2',
+            text: 'Beauty',
+            tabs: ['Best Sellers', 'Featured Brand', 'Inspiration'],
+            items: [
+                [
+                    {
+                        name: 'Korean fresh water surplus seven suits',
+                        price: 169
+                    }, {
+                        name: 'Estée Lauder Eight glasses of water. Five suits',
+                        price: 198
+                    }, {
+                        name: 'Yunifang red wine transparent mineral silk mask stick',
+                        price: 79.9
+                    }, {
+                        name: 'Gillette manual shaver with hidden blade',
+                        price: 228
+                    }, {
+                        name: 'Mediheal Hydrating mask (1st edition)',
+                        price: 119
+                    }, {
+                        name: 'Aloe vera soothing moisturizing gel',
+                        price: 39
+                    }, {
+                        name: 'Paula Jane choose basic skin care travel set of four',
+                        price: 299
+                    }, {
+                        name: 'Lift + Firm for Smoother, Youthful-Looking Skin',
+                        price: 257
+                    }, {
+                        name: 'Olay multi-effect repair trilogy gift set',
+                        price: 199
+                    }, {
+                        name: 'LOREALVolcanic oil control acne cleansing cream',
+                        price: 36
+                    }, {
+                        name: '100 birds gazelle water tender times now filling essence water',
+                        price: 139
+                    }, {
+                        name: 'Pearl new soft ying embellish three sets',
+                        price: 99
+                    }
+                ], [
+                    {
+                        name: 'Korean fresh water surplus seven suits',
+                        price: 169
+                    }, {
+                        name: 'Estée Lauder Eight glasses of water. Five suits',
+                        price: 198
+                    }, {
+                        name: 'Yunifang red wine transparent mineral silk mask stick',
+                        price: 79.9
+                    }, {
+                        name: 'Gillette manual shaver with hidden blade',
+                        price: 228
+                    }, {
+                        name: 'Mediheal Hydrating mask (1st edition)',
+                        price: 119
+                    }, {
+                        name: 'Aloe vera soothing moisturizing gel',
+                        price: 39
+                    }, {
+                        name: 'Paula Jane choose basic skin care travel set of four',
+                        price: 299
+                    }, {
+                        name: 'Lift + Firm for Smoother, Youthful-Looking Skin',
+                        price: 257
+                    }, {
+                        name: 'Olay multi-effect repair trilogy gift set',
+                        price: 199
+                    }, {
+                        name: 'LOREALVolcanic oil control acne cleansing cream',
+                        price: 36
+                    }, {
+                        name: '100 birds gazelle water tender times now filling essence water',
+                        price: 139
+                    }, {
+                        name: 'Pearl new soft ying embellish three sets',
+                        price: 99
+                    }
+                ], [
+                    {
+                        name: 'Korean fresh water surplus seven suits',
+                        price: 169
+                    }, {
+                        name: 'Estée Lauder Eight glasses of water. Five suits',
+                        price: 198
+                    }, {
+                        name: 'Yunifang red wine transparent mineral silk mask stick',
+                        price: 79.9
+                    }, {
+                        name: 'Gillette manual shaver with hidden blade',
+                        price: 228
+                    }, {
+                        name: 'Mediheal Hydrating mask (1st edition)',
+                        price: 119
+                    }, {
+                        name: 'Aloe vera soothing moisturizing gel',
+                        price: 39
+                    }, {
+                        name: 'Paula Jane choose basic skin care travel set of four',
+                        price: 299
+                    }, {
+                        name: 'Lift + Firm for Smoother, Youthful-Looking Skin',
+                        price: 257
+                    }, {
+                        name: 'Olay multi-effect repair trilogy gift set',
+                        price: 199
+                    }, {
+                        name: 'LOREALVolcanic oil control acne cleansing cream',
+                        price: 36
+                    }, {
+                        name: '100 birds gazelle water tender times now filling essence water',
+                        price: 139
+                    }, {
+                        name: 'Pearl new soft ying embellish three sets',
+                        price: 99
+                    }
                 ]
-            }, {
-                num: '3',
-                text: '手机通讯',
-                tabs: ['热门', '品质优选', '新机尝鲜'],
-                items: [
-                    [
-                        {
-                            name: '摩托罗拉 Moto Z Play',
-                            price: 3999
-                        }, {
-                            name: 'Apple iPhone 7 (A1660)',
-                            price: 6188
-                        }, {
-                            name: '小米 Note 全网通 白色',
-                            price: 999
-                        }, {
-                            name: '小米5 全网通 标准版 3GB内存',
-                            price: 1999
-                        }, {
-                            name: '荣耀7i 海岛蓝 移动联通4G手机',
-                            price: 1099
-                        }, {
-                            name: '乐视（Le）乐2（X620）32GB',
-                            price: 1099
-                        }, {
-                            name: 'OPPO R9 4GB+64GB内存版',
-                            price: 2499
-                        }, {
-                            name: '魅蓝note3 全网通公开版',
-                            price: 899
-                        }, {
-                            name: '飞利浦 X818 香槟金 全网通4G',
-                            price: 1998
-                        }, {
-                            name: '三星 Galaxy S7（G9300）',
-                            price: 4088
-                        }, {
-                            name: '华为 荣耀7 双卡双待双通',
-                            price: 1128
-                        }, {
-                            name: '努比亚(nubia)Z7Max(NX505J)',
-                            price: 728
-                        }
-                    ], [
-                        {
-                            name: '摩托罗拉 Moto Z Play',
-                            price: 3999
-                        }, {
-                            name: 'Apple iPhone 7 (A1660)',
-                            price: 6188
-                        }, {
-                            name: '小米 Note 全网通 白色',
-                            price: 999
-                        }, {
-                            name: '小米5 全网通 标准版 3GB内存',
-                            price: 1999
-                        }, {
-                            name: '荣耀7i 海岛蓝 移动联通4G手机',
-                            price: 1099
-                        }, {
-                            name: '乐视（Le）乐2（X620）32GB',
-                            price: 1099
-                        }, {
-                            name: 'OPPO R9 4GB+64GB内存版',
-                            price: 2499
-                        }, {
-                            name: '魅蓝note3 全网通公开版',
-                            price: 899
-                        }, {
-                            name: '飞利浦 X818 香槟金 全网通4G',
-                            price: 1998
-                        }, {
-                            name: '三星 Galaxy S7（G9300）',
-                            price: 4088
-                        }, {
-                            name: '华为 荣耀7 双卡双待双通',
-                            price: 1128
-                        }, {
-                            name: '努比亚(nubia)Z7Max(NX505J)',
-                            price: 728
-                        }
-                    ], [
-                        {
-                            name: '摩托罗拉 Moto Z Play',
-                            price: 3999
-                        }, {
-                            name: 'Apple iPhone 7 (A1660)',
-                            price: 6188
-                        }, {
-                            name: '小米 Note 全网通 白色',
-                            price: 999
-                        }, {
-                            name: '小米5 全网通 标准版 3GB内存',
-                            price: 1999
-                        }, {
-                            name: '荣耀7i 海岛蓝 移动联通4G手机',
-                            price: 1099
-                        }, {
-                            name: '乐视（Le）乐2（X620）32GB',
-                            price: 1099
-                        }, {
-                            name: 'OPPO R9 4GB+64GB内存版',
-                            price: 2499
-                        }, {
-                            name: '魅蓝note3 全网通公开版',
-                            price: 899
-                        }, {
-                            name: '飞利浦 X818 香槟金 全网通4G',
-                            price: 1998
-                        }, {
-                            name: '三星 Galaxy S7（G9300）',
-                            price: 4088
-                        }, {
-                            name: '华为 荣耀7 双卡双待双通',
-                            price: 1128
-                        }, {
-                            name: '努比亚(nubia)Z7Max(NX505J)',
-                            price: 728
-                        }
-                    ]
+            ]
+        }, {
+            num: '3',
+            text: 'Mobiles',
+            tabs: ['Best Sellers', 'Prepaid Phones', 'Newest Phones'],
+            items: [
+                [
+                    {
+                        name: 'MOTOROLA Moto Z Play 64G 128G',
+                        price: 958
+                    }, {
+                        name: 'Apple iPhone 7 (A1660) 64GB (Clearly Pink)',
+                        price: 1856
+                    }, {
+                        name: 'Apple iPhone 7 64G 128G 256G (A1660)',
+                        price: 999
+                    }, {
+                        name: 'Google Pixel 3XL 64GB (Clearly White)',
+                        price: 1999
+                    }, {
+                        name: 'Google Pixel 3XL 128GB (Clearly White)',
+                        price: 1099
+                    }, {
+                        name: 'Glory 7i island blue mobile unicom 4G mobile phone',
+                        price: 1099
+                    }, {
+                        name: 'Letv (Le) 2 (X620) 32GB 64G 128G 256G',
+                        price: 1025
+                    }, {
+                        name: 'Companion blue note3 netcom public edition',
+                        price: 899
+                    }, {
+                        name: 'Philips X818 champagne gold all netcom 4G',
+                        price: 1998
+                    }, {
+                        name: 'samsung Galaxy S7 64G 128G（G9300）',
+                        price: 1875
+                    }, {
+                        name: 'Huawei honor 7 dual-card dual-standby dual-pass',
+                        price: 1128
+                    }, {
+                        name: 'Nubian(nubia)Z7Max(NX505J) 64G 128G',
+                        price: 728
+                    }
+                ], [
+                    {
+                        name: 'MOTOROLA Moto Z Play 64G 128G',
+                        price: 958
+                    }, {
+                        name: 'Apple iPhone 7 (A1660) 64GB (Clearly Pink)',
+                        price: 1856
+                    }, {
+                        name: 'Apple iPhone 7 64G 128G 256G (A1660)',
+                        price: 999
+                    }, {
+                        name: 'Google Pixel 3XL 64GB (Clearly White)',
+                        price: 1999
+                    }, {
+                        name: 'Google Pixel 3XL 128GB (Clearly White)',
+                        price: 1099
+                    }, {
+                        name: 'Glory 7i island blue mobile unicom 4G mobile phone',
+                        price: 1099
+                    }, {
+                        name: 'Letv (Le) 2 (X620) 32GB 64G 128G 256G',
+                        price: 1025
+                    }, {
+                        name: 'Companion blue note3 netcom public edition',
+                        price: 899
+                    }, {
+                        name: 'Philips X818 champagne gold all netcom 4G',
+                        price: 1998
+                    }, {
+                        name: 'samsung Galaxy S7 64G 128G（G9300）',
+                        price: 1875
+                    }, {
+                        name: 'Huawei honor 7 dual-card dual-standby dual-pass',
+                        price: 1128
+                    }, {
+                        name: 'Nubian(nubia)Z7Max(NX505J) 64G 128G',
+                        price: 728
+                    }
+                ], [
+                    {
+                        name: 'MOTOROLA Moto Z Play 64G 128G',
+                        price: 958
+                    }, {
+                        name: 'Apple iPhone 7 (A1660) 64GB (Clearly Pink)',
+                        price: 1856
+                    }, {
+                        name: 'Apple iPhone 7 64G 128G 256G (A1660)',
+                        price: 999
+                    }, {
+                        name: 'Google Pixel 3XL 64GB (Clearly White)',
+                        price: 1999
+                    }, {
+                        name: 'Google Pixel 3XL 128GB (Clearly White)',
+                        price: 1099
+                    }, {
+                        name: 'Glory 7i island blue mobile unicom 4G mobile phone',
+                        price: 1099
+                    }, {
+                        name: 'Letv (Le) 2 (X620) 32GB 64G 128G 256G',
+                        price: 1025
+                    }, {
+                        name: 'Companion blue note3 netcom public edition',
+                        price: 899
+                    }, {
+                        name: 'Philips X818 champagne gold all netcom 4G',
+                        price: 1998
+                    }, {
+                        name: 'samsung Galaxy S7 64G 128G（G9300）',
+                        price: 1875
+                    }, {
+                        name: 'Huawei honor 7 dual-card dual-standby dual-pass',
+                        price: 1128
+                    }, {
+                        name: 'Nubian(nubia)Z7Max(NX505J) 64G 128G',
+                        price: 728
+                    }
                 ]
-            }, {
-                num: '4',
-                text: '家用电器',
-                tabs: ['热门', '大家电', '生活电器'],
-                items: [
-                    [
-                        {
-                            name: '暴风TV 超体电视 40X 40英寸',
-                            price: 1299
-                        }, {
-                            name: '小米（MI）L55M5-AA 55英寸',
-                            price: 3699
-                        }, {
-                            name: '飞利浦HTD5580/93 音响',
-                            price: 2999
-                        }, {
-                            name: '金门子H108 5.1套装音响组合',
-                            price: 1198
-                        }, {
-                            name: '方太ENJOY云魔方抽油烟机',
-                            price: 4390
-                        }, {
-                            name: '美的60升预约洗浴电热水器',
-                            price: 1099
-                        }, {
-                            name: '九阳电饭煲多功能智能电饭锅',
-                            price: 159
-                        }, {
-                            name: '美的电烤箱家用大容量',
-                            price: 329
-                        }, {
-                            name: '奥克斯(AUX)936破壁料理机',
-                            price: 1599
-                        }, {
-                            name: '飞利浦面条机 HR2356/31',
-                            price: 665
-                        }, {
-                            name: '松下NU-JA100W 家用蒸烤箱',
-                            price: 1799
-                        }, {
-                            name: '飞利浦咖啡机 HD7751/00',
-                            price: 1299
-                        }
-                    ], [
-                        {
-                            name: '暴风TV 超体电视 40X 40英寸',
-                            price: 1299
-                        }, {
-                            name: '小米（MI）L55M5-AA 55英寸',
-                            price: 3699
-                        }, {
-                            name: '飞利浦HTD5580/93 音响',
-                            price: 2999
-                        }, {
-                            name: '金门子H108 5.1套装音响组合',
-                            price: 1198
-                        }, {
-                            name: '方太ENJOY云魔方抽油烟机',
-                            price: 4390
-                        }, {
-                            name: '美的60升预约洗浴电热水器',
-                            price: 1099
-                        }, {
-                            name: '九阳电饭煲多功能智能电饭锅',
-                            price: 159
-                        }, {
-                            name: '美的电烤箱家用大容量',
-                            price: 329
-                        }, {
-                            name: '奥克斯(AUX)936破壁料理机',
-                            price: 1599
-                        }, {
-                            name: '飞利浦面条机 HR2356/31',
-                            price: 665
-                        }, {
-                            name: '松下NU-JA100W 家用蒸烤箱',
-                            price: 1799
-                        }, {
-                            name: '飞利浦咖啡机 HD7751/00',
-                            price: 1299
-                        }
-                    ], [
-                        {
-                            name: '暴风TV 超体电视 40X 40英寸',
-                            price: 1299
-                        }, {
-                            name: '小米（MI）L55M5-AA 55英寸',
-                            price: 3699
-                        }, {
-                            name: '飞利浦HTD5580/93 音响',
-                            price: 2999
-                        }, {
-                            name: '金门子H108 5.1套装音响组合',
-                            price: 1198
-                        }, {
-                            name: '方太ENJOY云魔方抽油烟机',
-                            price: 4390
-                        }, {
-                            name: '美的60升预约洗浴电热水器',
-                            price: 1099
-                        }, {
-                            name: '九阳电饭煲多功能智能电饭锅',
-                            price: 159
-                        }, {
-                            name: '美的电烤箱家用大容量',
-                            price: 329
-                        }, {
-                            name: '奥克斯(AUX)936破壁料理机',
-                            price: 1599
-                        }, {
-                            name: '飞利浦面条机 HR2356/31',
-                            price: 665
-                        }, {
-                            name: '松下NU-JA100W 家用蒸烤箱',
-                            price: 1799
-                        }, {
-                            name: '飞利浦咖啡机 HD7751/00',
-                            price: 1299
-                        }
-                    ]
+            ]
+        }, {
+            num: '4',
+            text: 'Home Appliances',
+            tabs: ['Best Sellers', 'Featured Brand', 'Household Appliances'],
+            items: [
+                [
+                    {
+                        name: '暴风TV 超体电视 40X 40英寸',
+                        price: 1299
+                    }, {
+                        name: '小米（MI）L55M5-AA 55英寸',
+                        price: 3699
+                    }, {
+                        name: '飞利浦HTD5580/93 音响',
+                        price: 2999
+                    }, {
+                        name: '金门子H108 5.1套装音响组合',
+                        price: 1198
+                    }, {
+                        name: '方太ENJOY云魔方抽油烟机',
+                        price: 4390
+                    }, {
+                        name: '美的60升预约洗浴电热水器',
+                        price: 1099
+                    }, {
+                        name: '九阳电饭煲多功能智能电饭锅',
+                        price: 159
+                    }, {
+                        name: '美的电烤箱家用大容量',
+                        price: 329
+                    }, {
+                        name: '奥克斯(AUX)936破壁料理机',
+                        price: 1599
+                    }, {
+                        name: '飞利浦面条机 HR2356/31',
+                        price: 665
+                    }, {
+                        name: '松下NU-JA100W 家用蒸烤箱',
+                        price: 1799
+                    }, {
+                        name: '飞利浦咖啡机 HD7751/00',
+                        price: 1299
+                    }
+                ], [
+                    {
+                        name: '暴风TV 超体电视 40X 40英寸',
+                        price: 1299
+                    }, {
+                        name: '小米（MI）L55M5-AA 55英寸',
+                        price: 3699
+                    }, {
+                        name: '飞利浦HTD5580/93 音响',
+                        price: 2999
+                    }, {
+                        name: '金门子H108 5.1套装音响组合',
+                        price: 1198
+                    }, {
+                        name: '方太ENJOY云魔方抽油烟机',
+                        price: 4390
+                    }, {
+                        name: '美的60升预约洗浴电热水器',
+                        price: 1099
+                    }, {
+                        name: '九阳电饭煲多功能智能电饭锅',
+                        price: 159
+                    }, {
+                        name: '美的电烤箱家用大容量',
+                        price: 329
+                    }, {
+                        name: '奥克斯(AUX)936破壁料理机',
+                        price: 1599
+                    }, {
+                        name: '飞利浦面条机 HR2356/31',
+                        price: 665
+                    }, {
+                        name: '松下NU-JA100W 家用蒸烤箱',
+                        price: 1799
+                    }, {
+                        name: '飞利浦咖啡机 HD7751/00',
+                        price: 1299
+                    }
+                ], [
+                    {
+                        name: '暴风TV 超体电视 40X 40英寸',
+                        price: 1299
+                    }, {
+                        name: '小米（MI）L55M5-AA 55英寸',
+                        price: 3699
+                    }, {
+                        name: '飞利浦HTD5580/93 音响',
+                        price: 2999
+                    }, {
+                        name: '金门子H108 5.1套装音响组合',
+                        price: 1198
+                    }, {
+                        name: '方太ENJOY云魔方抽油烟机',
+                        price: 4390
+                    }, {
+                        name: '美的60升预约洗浴电热水器',
+                        price: 1099
+                    }, {
+                        name: '九阳电饭煲多功能智能电饭锅',
+                        price: 159
+                    }, {
+                        name: '美的电烤箱家用大容量',
+                        price: 329
+                    }, {
+                        name: '奥克斯(AUX)936破壁料理机',
+                        price: 1599
+                    }, {
+                        name: '飞利浦面条机 HR2356/31',
+                        price: 665
+                    }, {
+                        name: '松下NU-JA100W 家用蒸烤箱',
+                        price: 1799
+                    }, {
+                        name: '飞利浦咖啡机 HD7751/00',
+                        price: 1299
+                    }
                 ]
-            }, {
-                num: '5',
-                text: '电脑数码',
-                tabs: ['热门', '电脑/平板', '潮流影音'],
-                items: [
-                    [
-                        {
-                            name: '戴尔成就Vostro 3800-R6308',
-                            price: 2999
-                        }, {
-                            name: '联想IdeaCentre C560',
-                            price: 5399
-                        }, {
-                            name: '惠普260-p039cn台式电脑',
-                            price: 3099
-                        }, {
-                            name: '华硕飞行堡垒旗舰版FX-PRO',
-                            price: 6599
-                        }, {
-                            name: '惠普(HP)暗影精灵II代PLUS',
-                            price: 12999
-                        }, {
-                            name: '联想(Lenovo)小新700电竞版',
-                            price: 5999
-                        }, {
-                            name: '游戏背光牧马人机械手感键盘',
-                            price: 499
-                        }, {
-                            name: '罗技iK1200背光键盘保护套',
-                            price: 799
-                        }, {
-                            name: '西部数据2.5英寸移动硬盘1TB',
-                            price: 419
-                        }, {
-                            name: '新睿翼3TB 2.5英寸 移动硬盘',
-                            price: 849
-                        }, {
-                            name: 'Rii mini i28无线迷你键盘鼠标',
-                            price: 349
-                        }, {
-                            name: '罗技G29 力反馈游戏方向盘',
-                            price: 2999
-                        }
-                    ], [
-                        {
-                            name: '戴尔成就Vostro 3800-R6308',
-                            price: 2999
-                        }, {
-                            name: '联想IdeaCentre C560',
-                            price: 5399
-                        }, {
-                            name: '惠普260-p039cn台式电脑',
-                            price: 3099
-                        }, {
-                            name: '华硕飞行堡垒旗舰版FX-PRO',
-                            price: 6599
-                        }, {
-                            name: '惠普(HP)暗影精灵II代PLUS',
-                            price: 12999
-                        }, {
-                            name: '联想(Lenovo)小新700电竞版',
-                            price: 5999
-                        }, {
-                            name: '游戏背光牧马人机械手感键盘',
-                            price: 499
-                        }, {
-                            name: '罗技iK1200背光键盘保护套',
-                            price: 799
-                        }, {
-                            name: '西部数据2.5英寸移动硬盘1TB',
-                            price: 419
-                        }, {
-                            name: '新睿翼3TB 2.5英寸 移动硬盘',
-                            price: 849
-                        }, {
-                            name: 'Rii mini i28无线迷你键盘鼠标',
-                            price: 349
-                        }, {
-                            name: '罗技G29 力反馈游戏方向盘',
-                            price: 2999
-                        }
-                    ], [
-                        {
-                            name: '戴尔成就Vostro 3800-R6308',
-                            price: 2999
-                        }, {
-                            name: '联想IdeaCentre C560',
-                            price: 5399
-                        }, {
-                            name: '惠普260-p039cn台式电脑',
-                            price: 3099
-                        }, {
-                            name: '华硕飞行堡垒旗舰版FX-PRO',
-                            price: 6599
-                        }, {
-                            name: '惠普(HP)暗影精灵II代PLUS',
-                            price: 12999
-                        }, {
-                            name: '联想(Lenovo)小新700电竞版',
-                            price: 5999
-                        }, {
-                            name: '游戏背光牧马人机械手感键盘',
-                            price: 499
-                        }, {
-                            name: '罗技iK1200背光键盘保护套',
-                            price: 799
-                        }, {
-                            name: '西部数据2.5英寸移动硬盘1TB',
-                            price: 419
-                        }, {
-                            name: '新睿翼3TB 2.5英寸 移动硬盘',
-                            price: 849
-                        }, {
-                            name: 'Rii mini i28无线迷你键盘鼠标',
-                            price: 349
-                        }, {
-                            name: '罗技G29 力反馈游戏方向盘',
-                            price: 2999
-                        }
-                    ]
+            ]
+        }, {
+            num: '5',
+            text: 'Computers',
+            tabs: ['Best Sellers', 'Tablets', 'Featured Brand'],
+            items: [
+                [
+                    {
+                        name: '戴尔成就Vostro 3800-R6308',
+                        price: 2999
+                    }, {
+                        name: '联想IdeaCentre C560',
+                        price: 5399
+                    }, {
+                        name: '惠普260-p039cn台式电脑',
+                        price: 3099
+                    }, {
+                        name: '华硕飞行堡垒旗舰版FX-PRO',
+                        price: 6599
+                    }, {
+                        name: '惠普(HP)暗影精灵II代PLUS',
+                        price: 12999
+                    }, {
+                        name: '联想(Lenovo)小新700电竞版',
+                        price: 5999
+                    }, {
+                        name: '游戏背光牧马人机械手感键盘',
+                        price: 499
+                    }, {
+                        name: '罗技iK1200背光键盘保护套',
+                        price: 799
+                    }, {
+                        name: '西部数据2.5英寸移动硬盘1TB',
+                        price: 419
+                    }, {
+                        name: '新睿翼3TB 2.5英寸 移动硬盘',
+                        price: 849
+                    }, {
+                        name: 'Rii mini i28无线迷你键盘鼠标',
+                        price: 349
+                    }, {
+                        name: '罗技G29 力反馈游戏方向盘',
+                        price: 2999
+                    }
+                ], [
+                    {
+                        name: '戴尔成就Vostro 3800-R6308',
+                        price: 2999
+                    }, {
+                        name: '联想IdeaCentre C560',
+                        price: 5399
+                    }, {
+                        name: '惠普260-p039cn台式电脑',
+                        price: 3099
+                    }, {
+                        name: '华硕飞行堡垒旗舰版FX-PRO',
+                        price: 6599
+                    }, {
+                        name: '惠普(HP)暗影精灵II代PLUS',
+                        price: 12999
+                    }, {
+                        name: '联想(Lenovo)小新700电竞版',
+                        price: 5999
+                    }, {
+                        name: '游戏背光牧马人机械手感键盘',
+                        price: 499
+                    }, {
+                        name: '罗技iK1200背光键盘保护套',
+                        price: 799
+                    }, {
+                        name: '西部数据2.5英寸移动硬盘1TB',
+                        price: 419
+                    }, {
+                        name: '新睿翼3TB 2.5英寸 移动硬盘',
+                        price: 849
+                    }, {
+                        name: 'Rii mini i28无线迷你键盘鼠标',
+                        price: 349
+                    }, {
+                        name: '罗技G29 力反馈游戏方向盘',
+                        price: 2999
+                    }
+                ], [
+                    {
+                        name: '戴尔成就Vostro 3800-R6308',
+                        price: 2999
+                    }, {
+                        name: '联想IdeaCentre C560',
+                        price: 5399
+                    }, {
+                        name: '惠普260-p039cn台式电脑',
+                        price: 3099
+                    }, {
+                        name: '华硕飞行堡垒旗舰版FX-PRO',
+                        price: 6599
+                    }, {
+                        name: '惠普(HP)暗影精灵II代PLUS',
+                        price: 12999
+                    }, {
+                        name: '联想(Lenovo)小新700电竞版',
+                        price: 5999
+                    }, {
+                        name: '游戏背光牧马人机械手感键盘',
+                        price: 499
+                    }, {
+                        name: '罗技iK1200背光键盘保护套',
+                        price: 799
+                    }, {
+                        name: '西部数据2.5英寸移动硬盘1TB',
+                        price: 419
+                    }, {
+                        name: '新睿翼3TB 2.5英寸 移动硬盘',
+                        price: 849
+                    }, {
+                        name: 'Rii mini i28无线迷你键盘鼠标',
+                        price: 349
+                    }, {
+                        name: '罗技G29 力反馈游戏方向盘',
+                        price: 2999
+                    }
                 ]
-            }
-        ];
+            ]
+        }
+    ];
 
     function lazyLoadFloor(){
         
              var items = {},
              loadedItemNum = 0,
              totalItemNum = $floor.length,
-             loadItemFn=null;                        
+             loadItemFn = null;                        
              
              $doc.on('floor-show', loadItemFn = function(e, index, elem) {
-                 console.log(1);
+                 // console.log(1);
                  if (items[index] !== 'loaded') {
                      $doc.trigger('floors-loadItem', [index, elem]);
                  }
@@ -952,11 +954,11 @@
                      $elem=$(elem);                
                         
                          items[index] = 'loaded';
-                         console.log(items[index]);
+                         // console.log(items[index]);
                          loadedItemNum++;
-                         console.log(index + ': loaded');
+                         // console.log(index + ': loaded');
                          if (loadedItemNum === totalItemNum) {
-                             // 全部加载完毕
+              
                              $doc.trigger('floors-itemsLoaded');
                          }
 
@@ -964,7 +966,7 @@
                              $elem.html(html); 
                              lazyLoadFloorImgs($elem);
                              $elem.tab({
-                                 event:'mouseenter',// mouseenter或click
+                                 event:'mouseenter',// mouseenter or click
                                  css3:false,
                                  js:false,
                                  animation:'fade',
@@ -978,8 +980,7 @@
              });
 
              $doc.on('floors-itemsLoaded', function(e) {
-                 console.log('floors-itemsLoaded');
-                 // 清除事件
+                 // console.log('floors-itemsLoaded');
                  $doc.off('floor-show', loadItemFn);
                  $win.off('scroll resize', timeToShow);
              });
@@ -1014,6 +1015,8 @@
         return html;
     }; 
 
+    
+
     function buildFloorBody(floorData) {
         var html = '';
         html += '<div class="floor-body">';
@@ -1023,7 +1026,7 @@
                 html += '<li class="floor-item fl">';
                 html += '<p class="floor-item-pic"><a href="###" target="_blank"><img src="img/floor/loading.gif" class="floor-img" data-src="img/floor/' + floorData.num + '/' + (i + 1) + '/' + (j + 1) + '.png" alt="" /></a></p>';
                 html += '<p class="floor-item-name"><a href="###" target="_blank" class="link">' + floorData.items[i][j].name + '</a></p>';
-                html += '<p class="floor-item-price">' + floorData.items[i][j].price + '</p>';
+                html += '<p class="floor-item-price">$' + floorData.items[i][j].price + '</p>';
                 html += '</li>';
             }
 
@@ -1037,6 +1040,7 @@
 
 
 
+
     var $win=$(window);
     var $doc=$(document);
     function isVisible($elem) {
@@ -1044,7 +1048,7 @@
     }
 
     function timeToShow() {
-        console.log('time to show');
+        // console.log('time to show');
         $floor.each(function (index,elem) {
             if(isVisible($(elem))){
                 // console.log('the'+(index+1)+'floor is visible');
@@ -1057,4 +1061,64 @@
     lazyLoadFloor();
 
     timeToShow();
-        })(jQuery);
+
+
+
+
+   
+
+
+    
+
+    // elevator
+    function whichFloor(){
+      var num = 1;
+
+      $floor.each(function(index, elem){
+        num = index;
+
+        if($win.scrollTop() + $win.height()/2 < $(elem).offset().top){
+          num = index - 1;
+          return false;
+        }
+      });
+
+      return num;
+    };
+
+    var $elevator = $('#elevator'),
+        $elevatorItems = $elevator.find('.elevator-item');
+
+    function setElevator(){
+      var num = whichFloor();
+      console.log(num);
+      if(num === -1){
+        $elevator.fadeOut();
+      }else{
+        $elevator.fadeIn();
+        $elevatorItems.removeClass('elevator-active');
+        $elevatorItems.eq(num).addClass('elevator-active');
+      }
+    };
+
+    setElevator();
+
+    $win.on('scroll resize', function(){
+      setElevator();
+    })
+
+    $elevator.on('click', '.elevator-item', function(){
+      $('html, body').animate({
+        // scrollTop: $floor[$(this).index()].offset().top 
+        scrollTop: $floor.eq($(this).index()).offset().top 
+      });
+    })
+
+    $('#backToTop').on('click', function(){
+      $('html, body').animate({
+        scrollTop: 0
+      });
+    })
+    
+
+})(jQuery);
